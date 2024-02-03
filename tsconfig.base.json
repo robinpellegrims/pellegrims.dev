@@ -14,7 +14,14 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@pellegrims-dev/markdown": ["libs/markdown/src/index.ts"],
+      "@pellegrims-dev/ui/atoms": ["libs/ui/atoms/src/index.ts"],
+      "@pellegrims-dev/ui/atoms/server": ["libs/ui/atoms/src/server.ts"],
+      "@pellegrims-dev/ui/molecules": ["libs/ui/molecules/src/index.ts"],
+      "@pellegrims-dev/ui/organisms": ["libs/ui/organisms/src/index.ts"],
+      "@pellegrims-dev/ui/templates": ["libs/ui/templates/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

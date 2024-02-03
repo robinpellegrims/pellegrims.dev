@@ -3,6 +3,22 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/pellegrims-dev",
   "projectType": "application",
-  "targets": {},
-  "tags": []
+  "tags": ["platform:react", "type:app", "scope:pellegrims-dev"],
+  "targets": {
+    "release": {
+      "executor": "@jscutlery/semver:version",
+      "options": {
+        "postTargets": [
+          "pellegrims-dev:github"
+        ]
+      }
+    },
+    "github": {
+      "executor": "@jscutlery/semver:github",
+      "options": {
+        "tag": "${tag}",
+        "notes": "${notes}"
+      }
+    }
+  }
 }

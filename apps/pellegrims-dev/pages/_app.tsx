@@ -1,18 +1,49 @@
+import 'tailwindcss/tailwind.css';
+import { Footer, Header } from '@pellegrims-dev/ui/organisms';
+import {
+  canonicalOrigin,
+  defaultSeoConfig,
+  facebookProfileUrl,
+  githubUrl,
+  linkedInUrl,
+  name,
+  twitterUrl,
+} from '../constants';
+import { DefaultSeo } from 'next-seo';
+import { useRouter } from 'next/router';
 import { AppProps } from 'next/app';
-import Head from 'next/head';
-import './styles.css';
+import { NextPage } from 'next';
+import { CounterDevAnalytics } from '@pellegrims-dev/ui/atoms';
+import { HomeTemplate } from '@pellegrims-dev/ui/templates';
 
-function CustomApp({ Component, pageProps }: AppProps) {
-  return (
-    <>
-      <Head>
-        <title>Welcome to pellegrims-dev!</title>
-      </Head>
-      <main className="app">
-        <Component {...pageProps} />
-      </main>
-    </>
-  );
-}
+const headerNavLinks: { text: string; href: string }[] = [
+  { text: 'Blog', href: '/blog' },
+  { text: 'Snippets', href: '/snippets' },
+  { text: 'Bookmarks', href: '/bookmarks' },
+  { text: 'Contact', href: '/contact' },
+];
 
-export default CustomApp;
+const App: NextPage<AppProps> = ({ Component, pageProps }) => (
+  <>
+    <DefaultSeo
+      {...defaultSeoConfig}
+      canonical={canonicalOrigin + useRouter().pathname}
+    />
+    <CounterDevAnalytics user="RobinPel" />
+    <HomeTemplate
+      header={<Header links={headerNavLinks} />}
+      content={<Component {...pageProps} />}
+      footer={
+        <Footer
+          name={name}
+          facebookUrl={facebookProfileUrl}
+          linkedInUrl={linkedInUrl}
+          twitterUrl={twitterUrl}
+          githubUrl={githubUrl}
+        />
+      }
+    />
+  </>
+);
+
+export default App;

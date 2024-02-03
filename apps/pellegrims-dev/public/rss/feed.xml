@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>Robin Pellegrims</title>
+        <link>https://www.pellegrims.dev</link>
+        <description>Professional software developer, front-end technical lead and freelance web developer.</description>
+        <lastBuildDate>Sat, 03 Feb 2024 18:30:01 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>Feed for Node.js</generator>
+        <image>
+            <title>Robin Pellegrims</title>
+            <url>https://www.pellegrims.devhttps://www.pellegrims.dev/avataaar.png</url>
+            <link>https://www.pellegrims.dev</link>
+        </image>
+        <copyright>All rights reserved 2024, Robin Pellegrims</copyright>
+        <item>
+            <title><![CDATA[Testing a contact form with Cypress]]></title>
+            <link>https://www.pellegrims.dev/blog/e2e-contact-form-cypress/</link>
+            <guid>https://www.pellegrims.dev/blog/e2e-contact-form-cypress/</guid>
+            <pubDate>Tue, 02 Aug 2022 00:00:00 GMT</pubDate>
+            <description><![CDATA[How to test a simple contact form using Cypress]]></description>
+            <content:encoded><![CDATA[<h2>Introduction</h2>
+<p>Many websites have a dedicated contact form that allows users to send a message to the website owner.
+Using <a href="https://www.cypress.io/" target="_blank" rel="noreferrer">Cypress</a>, we can easily write automated tests to prevent regressions to these types of
+forms.</p>
+<h2>Use case</h2>
+<p>For this article, we'll use a contact form containing three fields:</p>
+<ul>
+<li>Name</li>
+<li>E-Mail</li>
+<li>Message</li>
+</ul>
+<p><img src="https://www.pellegrims.dev/assets/blog/e2e-contact-form-cypress/form.png" alt="Contact Form screenshot {781x353}"></p>
+<h2>Acceptance criteria</h2>
+<p>Before diving into writing the actual tests, it's usually a good idea to reflect on the acceptance criteria to
+determine what actually needs to be tested:</p>
+<ul>
+<li>The contact form should be empty by default</li>
+<li>The form can only be submitted if
+<ul>
+<li>All form fields are filled in</li>
+<li>The e-mail address field contains a valid e-mail address</li>
+</ul>
+</li>
+<li>After the form has been successfully submitted
+<ul>
+<li>The fields should be hidden</li>
+<li>A message should be shown saying the form was sent successfully</li>
+</ul>
+</li>
+<li>In case of an http error after submitting the form, an error message should be displayed and the fields should remain
+visible</li>
+</ul>
+<h2>Support functions</h2>
+<p>Based on these acceptance criteria, we can prepare some support functions to implement the desired checks and to make
+the actual test file more readable and maintainable. These functions can be added in the Cypress test file on top of
+your actual tests, or you could add them in specific support file.</p>
+<h3>Retrieving the fields DOM elements</h3>
+<p>Since our contact form already contains ids for each field, the field elements can easily be retrieved:</p>
+<pre><code>type ChainableInputElement = Cypress.Chainable&#x3C;JQuery&#x3C;HTMLInputElement>>;
+
+export const getNameField = (): ChainableInputElement => cy.get('#field-Name');
+export const getMailField = (): ChainableInputElement => cy.get('#field-Email');
+export const getMessageField = (): ChainableInputElement =>
+  cy.get('#field-Message');
+export const getForm = () => cy.get('form');
+</code></pre>
+<p>The reason we explicitly define the return type for each of the query functions is that by default, <code>cy.get</code> returns a
+Chainable <code>HTMLElement</code>, which doesn't allow us to chain with other handy functions
+like <a href="https://docs.cypress.io/api/commands/type" target="_blank" rel="noreferrer">type</a>.</p>
+<h3>Filling out the form</h3>
+<p>We'll need to be able to fill out the form with some valid dummy values:</p>
+<pre><code>export const completeForm = () => {
+  getNameField().type('John Doe');
+  getMailField().type('john.doe@mail.com');
+  getMessageField().type('This is my message');
+};
+</code></pre>
+<h3>Check validity of fields</h3>
+<p>The fields are all required so they might throw a validation error <code>valueMissing</code>. On top of that, the e-mail
+field might throw a <code>typeMismatch</code> validation error if the entered value is not a valid e-mail address.</p>
+<pre><code>export const assertValueMissing = (field: ChainableInputElement) =>
+  assertValidity(field, { valueMissing: true });
+
+export const assertTypeMismatch = (field: ChainableInputElement) =>
+  assertValidity(field, { typeMismatch: true });
+
+const assertValidity = (
+  field: ChainableInputElement,
+  expectedValidity: { valueMissing?: boolean; typeMismatch?: boolean }
+) =>
+  field.invoke('prop', 'validity').should('deep.include', {
+    valueMissing: false,
+    typeMismatch: false,
+    ...expectedValidity,
+  });
+</code></pre>
+<h3>Form fields visibility</h3>
+<p>The following function verifies if the fields are visible or hidden:</p>
+<pre><code>export const assertFieldsVisible = (visible: boolean) =>
+  cy.get('input').should(visible ? 'have.length.gt' : 'have.length', 0);
+</code></pre>
+<h3>Mocking the api call</h3>
+<p>When we submit the form using a POST request in a Cypress test, we don't want to actually send the form data to the api.
+Instead, we can use <a href="https://docs.cypress.io/api/commands/intercept" target="_blank" rel="noreferrer">intercept</a> to mock the api call and return a
+specific response.</p>
+<p>Note that we store the intercepted call using an alias so that we can easily check later if the data was submitted or
+not.</p>
+<pre><code>const submitAlias = 'submit';
+
+export const mockResponseStatusCode = (statusCode: number) =>
+  cy
+    .intercept('POST', 'http://localhost:4200/api/contact', { statusCode })
+    .as(submitAlias);
+</code></pre>
+<h3>Checking that the form was submitted</h3>
+<p>To verify if the form data was submitted, the previously assigned alias can be used:</p>
+<pre><code>export const assertSubmitted = (submitted: boolean) =>
+  cy.get(`@${submitAlias}`).should(submitted ? 'not.be.null' : 'be.null');
+</code></pre>
+<h3>Submitting the form</h3>
+<p>There is only one button on the page, so we can just click the first button found to submit the form:</p>
+<pre><code>export const clickSubmitButton = () => cy.get('button').click();
+</code></pre>
+<h2>Implementing the Cypress test</h2>
+<p>Now that we have all these support functions ready, we can easily implement the actual tests:</p>
+<pre><code>describe('contact', () => {
+  beforeEach(() => cy.visit('/contact'));
+
+  it('form fields should be empty by default', () =>
+    [getNameField(), getMailField(), getMessageField()].forEach((field) =>
+      field.should('be.empty')
+    ));
+
+  it('form fields should have errors for missing fields', () => {
+    assertValueMissing(getNameField());
+    assertValueMissing(getMailField());
+    assertValueMissing(getMessageField());
+  });
+
+  it('email field should have an error for an incorrect email address', () => {
+    getMailField().type('john.doe@');
+    assertTypeMismatch(getMailField());
+  });
+
+  describe('when submitting an invalid form', () => {
+    beforeEach(() => {
+      mockResponseStatusCode(204);
+      clickSubmitButton();
+    });
+    it('should not send a POST request to the APi', () =>
+      assertSubmitted(false));
+    it('should keep the fields visible', () => assertFieldsVisible(true));
+  });
+
+  describe('when submitting a valid form', () => {
+    beforeEach(() => {
+      completeForm();
+      mockResponseStatusCode(204);
+      clickSubmitButton();
+    });
+    it('should send a POST request to the APi', () => assertSubmitted(true));
+    it('should display a success message', () =>
+      getForm().should('contain', 'Message succesfully sent, thank you!'));
+    it('should hide the form fields', () => assertFieldsVisible(false));
+  });
+
+  describe('when submitting a valid form returns an error response', () => {
+    beforeEach(() => {
+      completeForm();
+      mockResponseStatusCode(400);
+      clickSubmitButton();
+    });
+    it('should send a POST request to the APi', () => assertSubmitted(true));
+    it('should display an error message', () =>
+      getForm().should('contain', 'Something went wrong, try again later.'));
+    it('should keep the fields visible', () => assertFieldsVisible(true));
+  });
+});
+</code></pre>
+<p><img src="https://www.pellegrims.dev/assets/blog/e2e-contact-form-cypress/execution.png" alt="Contact Form screenshot {397x419}"></p>
+<h2>Summary</h2>
+<p>In this article, we demonstrated how to implement automated testing for a simple contact form using <a href="https://www.cypress.io/" target="_blank" rel="noreferrer">Cypress</a>.</p>
+<p>We first defined some acceptance criteria determining the requirements for the contact form. Based on these acceptance criteria, a number of support functions were implemented to keep the final test file more readable and maintainable.
+Finally, these support functions were used in the actual test file.</p>
+]]></content:encoded>
+            <enclosure url="https://www.pellegrims.dev/assets/blog/e2e-contact-form-cypress/cover.jpg" length="0" type="image/jpg"/>
+        </item>
+        <item>
+            <title><![CDATA[Make Angular Material dialogs type-safe]]></title>
+            <link>https://www.pellegrims.dev/blog/ng-material-dialog-type-safety/</link>
+            <guid>https://www.pellegrims.dev/blog/ng-material-dialog-type-safety/</guid>
+            <pubDate>Mon, 27 Jun 2022 00:00:00 GMT</pubDate>
+            <description><![CDATA[How to use Angular Material dialogs in a type-safe way and avoid runtime issues]]></description>
+            <content:encoded><![CDATA[<h2>Introduction</h2>
+<p>Angular Material provides a <code>MatDialogService</code> that allows developers to easily integrate modal dialogs into their
+applications. If you're not familiar with Angular Material or its dialog service, check out
+the <a href="https://material.angular.io/components/dialog" target="_blank" rel="noreferrer">official documentation</a>.</p>
+<p>While this dialog service is very easy to use, the interaction between the <code>MatDialogService</code> and your dialog component
+isn't completely type-safe and could potentially lead to runtime issues.</p>
+<h2>Use case</h2>
+<p>Our use case is using Angular v17.0.4 and is based
+on <a href="https://material.angular.io/components/dialog/overview#sharing-data-with-the-dialog-component" target="_blank" rel="noreferrer">this example</a> in the
+official Angular Material documentation.</p>
+<p>The dialog receives an input object representing a favorite animal:</p>
+<pre><code>export interface DialogData {
+  animal: string;
+}
+</code></pre>
+<p>It then displays the animals in a dialog and asks the user to cancel or approve:</p>
+<p><img src="https://www.pellegrims.dev/assets/blog/ng-material-dialog-type-safety/dialog.png" alt="Dialog screenshot {252x235}"></p>
+<p>After clicking one of the buttons, the dialog returns a boolean representing the button that was clicked.</p>
+<h2>Implementation</h2>
+<h3>Parent component</h3>
+<pre><code>&#x3C;!--template-->
+&#x3C;button mat-button (click)="openDialog()">Open dialog&#x3C;/button>
+</code></pre>
+<pre><code>@Component({
+  selector: 'app-component',
+  // template: see above
+})
+export class AppComponent {
+  private dialog = inject(DialogService);
+
+  protected openDialog() {
+    this.dialog
+      .open(DialogComponent, { data: { animal: 'panda' } })
+      .afterClosed()
+      .pipe(tap((result) => console.log(result === true)))
+      .subscribe();
+  }
+}
+</code></pre>
+<h3>Dialog component</h3>
+<pre><code>&#x3C;!--template-->
+&#x3C;h1 mat-dialog-title>Favorite Animal&#x3C;/h1>
+&#x3C;mat-dialog-content>
+  &#x3C;p>My favorite animal is "{{ data.animal }}".&#x3C;/p>
+  &#x3C;p>Do you approve?&#x3C;/p>
+&#x3C;/mat-dialog-content>
+&#x3C;mat-dialog-actions>
+  &#x3C;button mat-button (click)="cancelClick()">Cancel&#x3C;/button>
+  &#x3C;button mat-button (click)="okClick()">Ok&#x3C;/button>
+&#x3C;/mat-dialog-actions>
+</code></pre>
+<pre><code>@Component({
+  selector: 'example-dialog',
+  // template: see above
+})
+export class DialogComponent {
+  protected data: DialogData = inject(MAT_DIALOG_DATA);
+  protected dialogRef: MatDialogRef&#x3C;DialogComponent> = inject(MatDialogRef);
+
+  protected cancelClick = () => this.dialogRef.close(false);
+  protected okClick = () => this.dialogRef.close(true);
+}
+</code></pre>
+<h2>Type safety issues</h2>
+<p>While the dialog in our use case is currently working perfectly fine, the interaction between the parent and the dialog
+component is not completely type-safe.</p>
+<p>Let's identify some possible issues that will still compile completely fine, but that would break at runtime.</p>
+<h3>Parent component</h3>
+<ul>
+<li>When opening the dialog, a typo could be made in the <code>animal</code> property name that is passed as the dialog data:</li>
+</ul>
+<pre><code>this.dialog.open(DialogComponent, { data: { annimal: 'panda' } });
+</code></pre>
+<ul>
+<li>The parent component receives an untyped result from the <code>afterClosed</code> operator that could be used in a wrong way:</li>
+</ul>
+<pre><code>this.dialog
+  .open(DialogComponent, { data: { animal: 'panda' } })
+  .afterClosed()
+  // this will always log false, since result is a boolean
+  .pipe(tap((result) => console.log(result === 'true')))
+  .subscribe();
+</code></pre>
+<h3>Dialog component</h3>
+<ul>
+<li>In the dialog component we might have forgotten about the correct type we were going to use and use a wrong type
+instead:</li>
+</ul>
+<pre><code>protected data: { favouriteAnimal: string } = inject(MAT_DIALOG_DATA);
+</code></pre>
+<ul>
+<li>The dialog should return a boolean value after closing, but nothing currently prevents us from passing anything else
+when closing the dialog:</li>
+</ul>
+<pre><code>this.dialogRef.close('cancel');
+</code></pre>
+<h3>Parent-child type synchronization</h3>
+<p>There is no synchronization between the Data and Result types used in the parent component and the dialog component.
+This means the application will still compile when we use different types by mistake on both sides.</p>
+<h2>Adding generic params</h2>
+<p>A first step towards more type-safety would be to explicitly specify the types in the parent component when opening the
+dialog:</p>
+<pre><code>// parent component
+this.dialog
+  .open&#x3C;DialogComponent, DialogData, boolean>(DialogComponent, {
+    data: { animal: 'panda' },
+  })
+  .afterClosed()
+  // result: boolean | undefined
+  .pipe(tap((result) => console.log(result === true)))
+  .subscribe();
+</code></pre>
+<p>In the dialog component, we can force the result type when injecting the <code>MatDialogRef</code>:</p>
+<pre><code>// dialog component
+protected data: DialogData = inject(MAT_DIALOG_DATA);
+protected dialogRef: MatDialogRef&#x3C;DialogComponent, boolean> = inject(MatDialogRef);
+</code></pre>
+<p>While these simple changes effectively force the developer to use correct dialog data and result objects, it still
+doesn't prevent using different Data/Result types in the parent and dialog component. It also has the drawback that the
+types need to be specified in both the parent and child component.</p>
+<h2>Using an abstract dialog component superclass</h2>
+<p>To increase type safety even further between the parent and dialog component and have a single source of truth for the
+dialog Data/Result types, a custom dialog service and abstract dialog component superclass can be created:</p>
+<pre><code>@Directive()
+export abstract class StronglyTypedDialog&#x3C;DialogData, DialogResult> {
+  protected data: DialogData = inject(MAT_DIALOG_DATA);
+  protected dialogRef: MatDialogRef&#x3C;
+    StronglyTypedDialog&#x3C;DialogData, DialogResult>,
+    DialogResult
+  > = inject(MatDialogRef);
+}
+
+@Injectable({ providedIn: 'root' })
+export class DialogService {
+  protected dialog = inject(MatDialog);
+
+  open = &#x3C;DialogData, DialogResult>(
+    component: ComponentType&#x3C;StronglyTypedDialog&#x3C;DialogData, DialogResult>>,
+    config?: MatDialogConfig&#x3C;DialogData>
+  ): MatDialogRef&#x3C;
+    StronglyTypedDialog&#x3C;DialogData, DialogResult>,
+    DialogResult
+  > => this.dialog.open(component, config);
+}
+</code></pre>
+<p>Since the constructor has been moved to an abstract superclass, the dialog component can then be simplified like this:</p>
+<pre><code>@Component({
+  selector: 'example-dialog',
+  // template: unchanged, see above
+})
+export class DialogComponent extends StronglyTypedDialog&#x3C;DialogData, boolean> {
+  protected cancelClick = () => this.dialogRef.close(false);
+  protected okClick = () => this.dialogRef.close(true);
+}
+</code></pre>
+<p>The dialog can then be opened through this new <code>DialogService</code> instead of the regular <code>MatDialog</code> service:</p>
+<pre><code>@Component({
+  selector: 'app-component',
+  // template: unchanged, see above
+})
+export class AppComponent {
+  private dialog = inject(DialogService);
+
+  protected openDialog() {
+    this.dialog
+      .open(DialogComponent, { data: { animal: 'panda' } })
+      .afterClosed()
+      // result: boolean | undefined
+      .pipe(tap((result) => console.log(result === true)))
+      .subscribe();
+  }
+}
+</code></pre>
+<p>This will achieve full type-safety on both the parent and dialog component while making the DialogComponent the single
+source of truth for the Data/Result types.</p>
+<h2>Summary</h2>
+<p>We explored multiple possible runtime issues when using Angular Material dialogs:</p>
+<ul>
+<li>passing unexpected data into the dialog</li>
+<li>returning unexpected results from the dialog to the parent component</li>
+<li>using different data/result types in the parent and dialog component</li>
+</ul>
+<p>Some of the issues can be addressed by adding generic params:</p>
+<ul>
+<li>in the function call that opens the dialog</li>
+<li>to the injected <code>MatDialogRef</code> in the dialog constructor</li>
+</ul>
+<p>Finally, the <code>open()</code> method of the <code>MatDialogService</code> can be wrapped in a custom service that provides full type-safety
+and addresses all of the explored issues.</p>
+<h2>More information</h2>
+<ul>
+<li><a href="https://github.com/robinpellegrims/angular-material-type-safe-dialog" target="_blank" rel="noreferrer">Example repository</a></li>
+<li><a href="https://material.angular.io/components/dialog" target="_blank" rel="noreferrer">Official documentation</a></li>
+</ul>
+]]></content:encoded>
+            <enclosure url="https://www.pellegrims.dev/assets/blog/ng-material-dialog-type-safety/cover.jpg" length="0" type="image/jpg"/>
+        </item>
+        <item>
+            <title><![CDATA[Fixing WiFi on a PIPO M9 Pro tablet]]></title>
+            <link>https://www.pellegrims.dev/blog/pipo-m9-tablet-fix-wifi/</link>
+            <guid>https://www.pellegrims.dev/blog/pipo-m9-tablet-fix-wifi/</guid>
+            <pubDate>Sun, 22 Dec 2013 00:00:00 GMT</pubDate>
+            <description><![CDATA[Easy solution to fix my PIPO M9 Pro tablet's WiFi connection disconnecting every 5-10 seconds]]></description>
+            <content:encoded><![CDATA[<p>Ever since I received my <a href="http://www.pipo.com/product.php?id=123" target="_blank" rel="noreferrer">PIPO M9 Pro tablet</a>, I've been experiencing WiFi issues. Every 5-10 minutes, the tablet would simply lose its WiFi connection. Usually it took a few minutes before it would reconnect. No need to say this was very frustrating when doing anything that involves the network connection.</p>
+<p>I've come across various forums (<a href="http://www.freaktab.com/showthread.php?8568-Pipo-M9-Pro-wifi-antenna-modification-instructions" title="FreakTab" target="_blank" rel="noreferrer">FreakTab</a>, <a href="http://www.arctablet.com/blog/forum/pipo-max-m9/pipo-m9-pro-wifi-problem/" target="_blank" rel="noreferrer">ArcTablet</a> and <a href="http://tablette-chinoise.net/pipo-m9-pro-problemes-wifi-coupures-ralentissement-t2648/page180.html" target="_blank" rel="noreferrer">Tablette-Chinoise</a>) full of people complaining about the same issues. The problem seems to be caused by bad placement and bad insulation of the internal WiFi antenna.</p>
+<p>Various solutions were proposed:</p>
+<ul>
+<li>Removing the grounding wire that touches the WiFi antenna and its wire</li>
+<li>Replacing the grounding wire and the WiFi antenna's wire by (better) shielded wires, using wires from old USB cables (involves soldering)</li>
+<li>Isolating the WiFi antenna and its wire by using insulating tape (see <a href="http://www.youtube.com/watch?v=d4rEhR01kuY" target="_blank" rel="noreferrer">instruction video</a>)</li>
+</ul>
+<p>I'm not very experienced with soldering and I didn't really like removing ground wires (they're there for a reason, right?), so I went for the last method.</p>
+<p>I carefully opened my tablet using guitar plectra to put between the screen and the back case. The guy in the video does it with plastic cards, but I couldn't find anything like that. The WiFi antenna turns out to be the black plastic thing glued to the case at the top right. I carefully unglued it by using a screwdriver and I cutted some pieces of cardboard to put underneath the antenna. I then stabilized these pieces of cardboard with some insulation tape, glued the antenna on it and covered the antenna and its wire with a few more layers of insulating tape.</p>
+<p><img src="https://www.pellegrims.dev/assets/blog/pipo-m9-tablet-fix-wifi/image1.jpg" alt="Dialog screenshot {1024x768}">
+<img src="https://www.pellegrims.dev/assets/blog/pipo-m9-tablet-fix-wifi/cover.jpg" alt="Dialog screenshot {1024x768}">
+<img src="https://www.pellegrims.dev/assets/blog/pipo-m9-tablet-fix-wifi/image3.jpg" alt="Dialog screenshot {1024x768}"></p>
+<p>After wrapping it all back together, I rebooted the tablet and the WiFi connection now seems to be much more stable. No more disconnects and usually more than 50Mbps where I had like 10Mbps before. I can't believe these tablets are sold with such a design failure. I guess that's what you get when buying cheap chinese electronics, right? ;-)</p>
+]]></content:encoded>
+            <enclosure url="https://www.pellegrims.dev/assets/blog/pipo-m9-tablet-fix-wifi/cover.jpg" length="0" type="image/jpg"/>
+        </item>
+        <item>
+            <title><![CDATA[Raspberry Pi NAS with Truecrypt and a 4 KB sector size external hard drive]]></title>
+            <link>https://www.pellegrims.dev/blog/raspberry-pi-nas-truecrypt-external-hard-drive/</link>
+            <guid>https://www.pellegrims.dev/blog/raspberry-pi-nas-truecrypt-external-hard-drive/</guid>
+            <pubDate>Tue, 29 Oct 2013 00:00:00 GMT</pubDate>
+            <description><![CDATA[Turning a Raspberry Pi into a NAS with encrypted external storage]]></description>
+            <content:encoded><![CDATA[<p>Lately I've been playing around with the <a href="http://en.wikipedia.org/wiki/Raspberry_Pi" target="_blank" rel="noreferrer">Raspberry Pi</a> and I decided to use one as a custom <a href="http://en.wikipedia.org/wiki/Network-attached_storage" target="_blank" rel="noreferrer">NAS</a> to serve as a central backup system and as a central hub containing media for my two other Raspberry media centers (running <a href="http://openelec.tv/" target="_blank" rel="noreferrer">OpenElec</a>).</p>
+<p>To provide the actual storage, I bought myself this <a href="http://www.seagate.com/external-hard-drives/desktop-hard-drives/expansion-hard-drive/" target="_blank" rel="noreferrer">Seagate Expansion 3TB</a> hard drive. I chose to install <a href="http://www.raspbian.org/" target="_blank" rel="noreferrer">Raspbian</a> as OS, as it seemed to be the obvious choice in terms of performance.</p>
+<h2>Raspberry Pi as NAS</h2>
+<p>While the Pi's specifications won't allow you to build the most powerful NAS in the world, it still has a lot of advantages.</p>
+<h4>Advantages</h4>
+<ul>
+<li><strong>Energy efficient</strong>: the pi only uses 2W per hour, so all together this means a yearly cost of €5. Of course you need to add to that the energy usage of the external hard drive, which in my case is something like 9W. In total this means a yearly cost of of +/- €20. This is far less than any other NAS system.</li>
+<li><strong>Low noise</strong>: the pi does not make any noise, so you only need to worry about the external hard drive's noise</li>
+<li><strong>Cheap</strong>: pi's are available at around €40, a simple case costs €10 so for +/- €50 you have your NAS system</li>
+<li><strong>Small</strong>: the pi is a pocket-size computer, so it fits anywhere.</li>
+</ul>
+<h4>Disadvantages</h4>
+<ul>
+<li><strong>USB 2.0</strong>: while my external hard drive has a USB 3-0 port, the pi only has 2 USB 2.0 ports. This limits the maximum transfer speed.</li>
+<li><strong>LAN 100Mbps</strong>: if your other network devices have gigabit-speed (or better) lan ports, the transfer speed for reading/writing to your raspberry pi NAS will be limited.</li>
+<li><strong>Performance</strong>: with 512MB of RAM and a default cpu speed of 700MHz you shouldn't expect any miracles, but overall the performance is acceptable if you're not running too many other cpu consuming applications on it</li>
+</ul>
+<h2>Truecrypt</h2>
+<p>I started by formatting and encrypting my external drive on my Ubuntu box. I chose ext4 as filesystem. Then I connected the drive to my Raspberry Pi, using one of the 2 USB ports.</p>
+<p>In the meantime I found <a href="http://reinhard-seiler.blogspot.be/2012/07/compile-truecrypt-on-raspberry-pi.html" target="_blank" rel="noreferrer">this post</a> by <a href="http://reinhard-seiler.blogspot.be/" target="_blank" rel="noreferrer">Reinhard Seiler</a>, telling that Truecrypt doesn't come precompiled for the Raspberry Pi, so I needed to either compile it myself or use the compiled binary available on his blog. So I downloaded the binary from his blog and tried to mount my drive using the compiled Truecrypt binary. Raspbian does not provide some necessary kernel modules for encryption, so you need to use the flag -m=nokernelcrypto to use truecrypt encryption on the Raspberry.</p>
+<p>That was when I ran into the following error message.</p>
+<blockquote>
+<p><em>Error: The drive uses a sector size other than 512 bytes.</em></p>
+<p>Due to limitations of components available on your platform, partition/device-hosted volumes cannot be created/used on the drive.</p>
+<p>Possible solutions:</p>
+<ul>
+<li>Create a file-hosted volume (container) on the drive.</li>
+<li>Use a drive with 512-byte sectors.</li>
+<li>Use TrueCrypt on another platform.</li>
+</ul>
+</blockquote>
+<p>So apparently Truecrypt on Linux doesn't support hard drives with a sector size other than 512 bytes while my brand new external hard drive had a sector size of 4Kb which seems to be the new standard for recent hard drives. The same error appeared when mounting on my Ubuntu box, so it had to be a Truecrypt issue.</p>
+<p>I then stumbled upon <a href="http://lenlo.wordpress.com/2013/03/19/truecrypt-mac-os-x-advanced-format-drives-true/" target="_blank" rel="noreferrer">this post</a> by a guy who ran into the same problem on Mac OSX. He eventually got it working by digging around in the code and compiling his own custom version of Truecrypt. <a href="http://karlherrick.com/dev/2013/01/21/compiling-truecrypt-on-raspberry-pi/" target="_blank" rel="noreferrer">This post</a> by Karl Herrick describes well how to compile Truecrypt on the Raspberry Pi, so I decided to take a look into Truecrypt's source code to eventually correct the issue and compile my own Truecrypt binary as well.</p>
+<p>I downloaded the source code for Truecrypt 7.1a and I eventually found the following section in the file Core/Unix/CoreUnix.cpp on line 445:</p>
+<pre><code>#if defined (TC_LINUX)
+  if (volume - > GetSectorSize() != TC_SECTOR_SIZE_LEGACY) {
+      if (options.Protection == VolumeProtection::HiddenVolumeReadOnly)
+          throw UnsupportedSectorSizeHiddenVolumeProtection();
+      if (options.NoKernelCrypto)
+          throw UnsupportedSectorSizeNoKernelCrypto();
+  }
+#endif
+</code></pre>
+<p>So it seems that when we're using the nokernelcrypto flag for mounting truecrypt-encrypted hard drives with sector sizes other than 512bytes, Truecrypt fails by design.</p>
+<p>While not having any clue whatsoever as to why this was implemented this way, I commented out these 2 lines as follows:</p>
+<pre><code>#if defined(TC_LINUX)
+if (volume - &#x26; gt; GetSectorSize() != TC_SECTOR_SIZE_LEGACY) {
+    if (options.Protection == VolumeProtection::HiddenVolumeReadOnly)
+        throw UnsupportedSectorSizeHiddenVolumeProtection();
+
+    //if (options.NoKernelCrypto)
+    //throw UnsupportedSectorSizeNoKernelCrypto();
+}
+#endif
+</code></pre>
+<p>Then I followed the instructions on <a href="http://karlherrick.com/dev/2013/01/21/compiling-truecrypt-on-raspberry-pi/" target="_blank" rel="noreferrer">Karl Herrick's blog post</a> to compile Truecrypt, but there were some errors in his script, so I adapted it as follows:</p>
+<pre><code>#get source files other than the TrueCrypt source
+sudo wget -P /usr/local/src http://prdownloads.sourceforge.net/wxwindows/wxWidgets-2.8.11.tar.gz
+sudo wget -P /usr/local/src/pkcs11 ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-11/v211/pkcs11.h
+sudo wget -P /usr/local/src/pkcs11 ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-11/v211/pkcs11f.h
+sudo wget -P /usr/local/src/pkcs11 ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-11/v211/pkcs11t.h
+
+#get and install dependent packages
+sudo apt-get -y install libgtk2.0-dev libfuse-dev nasm libwxgtk2.8-dev
+
+#extract, configure, and make wxWidgets
+sudo tar -xzvf /usr/local/src/wxWidgets-2.8.11.tar.gz -C /usr/local/src
+cd /usr/local/src/wxWidgets-2.8.11/
+./configure
+make
+
+#setup, extract
+export PKCS11_INC=/usr/local/src/pkcs11
+sudo tar -xzvf /usr/local/src/TrueCrypt\\ 7.1a\\ Source.tar.gz -C /usr/local/src
+cd /usr/local/src/truecrypt-7.1a-source
+
+#comment out some lines that prevented building
+sed -i 's#TC_TOKEN_ERR (CKR_NEW_PIN_MODE)#/\*TC_TOKEN_ERR (CKR_NEW_PIN_MODE)\*/#g' Common/SecurityToken.cpp
+sed -i 's#TC_TOKEN_ERR (CKR_NEXT_OTP)#/\*TC_TOKEN_ERR (CKR_NEXT_OTP)\*/#g' Common/SecurityToken.cpp
+sed -i 's#TC_TOKEN_ERR (CKR_FUNCTION_REJECTED)#/\*TC_TOKEN_ERR (CKR_FUNCTION_REJECTED)\*/#g' Common/SecurityToken.cpp
+
+#compile, build, make!
+sudo make WX_ROOT=/usr/local/src/wxWidgets-2.8.11/ wxbuild
+sudo -E make WXSTATIC=1
+
+echo
+echo TrueCrypt should be found in /usr/local/src/truecrypt-7.1a-source/Main/
+</code></pre>
+<p>By using this custom version of Truecrypt, I finally got to mount my drive without any issues and it's still working like a charm after a few months. The drive is operating the way it should and I have not lost any data so far.</p>
+]]></content:encoded>
+            <enclosure url="https://www.pellegrims.dev/assets/blog/raspberry-pi-nas-truecrypt-external-hard-drive/cover.jpg" length="0" type="image/jpg"/>
+        </item>
+    </channel>
+</rss>

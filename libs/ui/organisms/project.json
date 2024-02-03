@@ -1,0 +1,8 @@
+{
+  "name": "ui-organisms",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/ui/organisms/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {}
+}
