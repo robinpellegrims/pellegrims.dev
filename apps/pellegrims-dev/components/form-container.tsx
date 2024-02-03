@@ -29,7 +29,7 @@ export const FormContainer: FunctionComponent<FormContainerProps> = ({
     event.preventDefault();
 
     const fields = event.target as unknown as Record<
-      typeof formFieldNames[number],
+      (typeof formFieldNames)[number],
       HTMLInputElement
     >;
 

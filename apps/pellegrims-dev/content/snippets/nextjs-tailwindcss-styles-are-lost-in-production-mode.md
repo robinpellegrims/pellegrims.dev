@@ -28,10 +28,7 @@ I extracted plenty of components from my pages into the components folder and th
 
 ```javascript
 module.exports = {
-  purge: [
-    join(__dirname, 'pages/**/*.{js,ts,jsx,tsx}'),
-    join(__dirname, 'components/**/*.{js,ts,jsx,tsx}'),
-  ],
+  purge: [join(__dirname, 'pages/**/*.{js,ts,jsx,tsx}'), join(__dirname, 'components/**/*.{js,ts,jsx,tsx}')],
 };
 ```
 

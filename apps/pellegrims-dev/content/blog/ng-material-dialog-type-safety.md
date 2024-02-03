@@ -177,23 +177,14 @@ dialog Data/Result types, a custom dialog service and abstract dialog component 
 @Directive()
 export abstract class StronglyTypedDialog<DialogData, DialogResult> {
   protected data: DialogData = inject(MAT_DIALOG_DATA);
-  protected dialogRef: MatDialogRef<
-    StronglyTypedDialog<DialogData, DialogResult>,
-    DialogResult
-  > = inject(MatDialogRef);
+  protected dialogRef: MatDialogRef<StronglyTypedDialog<DialogData, DialogResult>, DialogResult> = inject(MatDialogRef);
 }
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
   protected dialog = inject(MatDialog);
 
-  open = <DialogData, DialogResult>(
-    component: ComponentType<StronglyTypedDialog<DialogData, DialogResult>>,
-    config?: MatDialogConfig<DialogData>
-  ): MatDialogRef<
-    StronglyTypedDialog<DialogData, DialogResult>,
-    DialogResult
-  > => this.dialog.open(component, config);
+  open = <DialogData, DialogResult>(component: ComponentType<StronglyTypedDialog<DialogData, DialogResult>>, config?: MatDialogConfig<DialogData>): MatDialogRef<StronglyTypedDialog<DialogData, DialogResult>, DialogResult> => this.dialog.open(component, config);
 }
 ```
 

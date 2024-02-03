@@ -52,8 +52,7 @@ type ChainableInputElement = Cypress.Chainable<JQuery<HTMLInputElement>>;
 
 export const getNameField = (): ChainableInputElement => cy.get('#field-Name');
 export const getMailField = (): ChainableInputElement => cy.get('#field-Email');
-export const getMessageField = (): ChainableInputElement =>
-  cy.get('#field-Message');
+export const getMessageField = (): ChainableInputElement => cy.get('#field-Message');
 export const getForm = () => cy.get('form');
 ```
 
@@ -79,16 +78,11 @@ The fields are all required so they might throw a validation error `valueMissing
 field might throw a `typeMismatch` validation error if the entered value is not a valid e-mail address.
 
 ```typescript
-export const assertValueMissing = (field: ChainableInputElement) =>
-  assertValidity(field, { valueMissing: true });
+export const assertValueMissing = (field: ChainableInputElement) => assertValidity(field, { valueMissing: true });
 
-export const assertTypeMismatch = (field: ChainableInputElement) =>
-  assertValidity(field, { typeMismatch: true });
+export const assertTypeMismatch = (field: ChainableInputElement) => assertValidity(field, { typeMismatch: true });
 
-const assertValidity = (
-  field: ChainableInputElement,
-  expectedValidity: { valueMissing?: boolean; typeMismatch?: boolean }
-) =>
+const assertValidity = (field: ChainableInputElement, expectedValidity: { valueMissing?: boolean; typeMismatch?: boolean }) =>
   field.invoke('prop', 'validity').should('deep.include', {
     valueMissing: false,
     typeMismatch: false,
@@ -101,8 +95,7 @@ const assertValidity = (
 The following function verifies if the fields are visible or hidden:
 
 ```typescript
-export const assertFieldsVisible = (visible: boolean) =>
-  cy.get('input').should(visible ? 'have.length.gt' : 'have.length', 0);
+export const assertFieldsVisible = (visible: boolean) => cy.get('input').should(visible ? 'have.length.gt' : 'have.length', 0);
 ```
 
 ### Mocking the api call
@@ -117,10 +110,7 @@ not.
 ```typescript
 const submitAlias = 'submit';
 
-export const mockResponseStatusCode = (statusCode: number) =>
-  cy
-    .intercept('POST', 'http://localhost:4200/api/contact', { statusCode })
-    .as(submitAlias);
+export const mockResponseStatusCode = (statusCode: number) => cy.intercept('POST', 'http://localhost:4200/api/contact', { statusCode }).as(submitAlias);
 ```
 
 ### Checking that the form was submitted
@@ -128,8 +118,7 @@ export const mockResponseStatusCode = (statusCode: number) =>
 To verify if the form data was submitted, the previously assigned alias can be used:
 
 ```typescript
-export const assertSubmitted = (submitted: boolean) =>
-  cy.get(`@${submitAlias}`).should(submitted ? 'not.be.null' : 'be.null');
+export const assertSubmitted = (submitted: boolean) => cy.get(`@${submitAlias}`).should(submitted ? 'not.be.null' : 'be.null');
 ```
 
 ### Submitting the form
@@ -148,10 +137,7 @@ Now that we have all these support functions ready, we can easily implement the 
 describe('contact', () => {
   beforeEach(() => cy.visit('/contact'));
 
-  it('form fields should be empty by default', () =>
-    [getNameField(), getMailField(), getMessageField()].forEach((field) =>
-      field.should('be.empty')
-    ));
+  it('form fields should be empty by default', () => [getNameField(), getMailField(), getMessageField()].forEach((field) => field.should('be.empty')));
 
   it('form fields should have errors for missing fields', () => {
     assertValueMissing(getNameField());
@@ -169,8 +155,7 @@ describe('contact', () => {
       mockResponseStatusCode(204);
       clickSubmitButton();
     });
-    it('should not send a POST request to the APi', () =>
-      assertSubmitted(false));
+    it('should not send a POST request to the APi', () => assertSubmitted(false));
     it('should keep the fields visible', () => assertFieldsVisible(true));
   });
 
@@ -181,8 +166,7 @@ describe('contact', () => {
       clickSubmitButton();
     });
     it('should send a POST request to the APi', () => assertSubmitted(true));
-    it('should display a success message', () =>
-      getForm().should('contain', 'Message succesfully sent, thank you!'));
+    it('should display a success message', () => getForm().should('contain', 'Message succesfully sent, thank you!'));
     it('should hide the form fields', () => assertFieldsVisible(false));
   });
 
@@ -193,8 +177,7 @@ describe('contact', () => {
       clickSubmitButton();
     });
     it('should send a POST request to the APi', () => assertSubmitted(true));
-    it('should display an error message', () =>
-      getForm().should('contain', 'Something went wrong, try again later.'));
+    it('should display an error message', () => getForm().should('contain', 'Something went wrong, try again later.'));
     it('should keep the fields visible', () => assertFieldsVisible(true));
   });
 });

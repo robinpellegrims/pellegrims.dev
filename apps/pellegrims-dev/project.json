@@ -8,9 +8,7 @@
     "release": {
       "executor": "@jscutlery/semver:version",
       "options": {
-        "postTargets": [
-          "pellegrims-dev:github"
-        ]
+        "postTargets": ["pellegrims-dev:github"]
       }
     },
     "github": {
