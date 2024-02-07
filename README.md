@@ -2,4 +2,4 @@
 
 Personal website
 
-https://www.pellegrims.dev/
+https://www.pellegrims.dev
