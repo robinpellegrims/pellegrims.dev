@@ -95,9 +95,6 @@ importers:
       '@swc/jest':
         specifier: 0.2.36
         version: 0.2.36(@swc/core@1.5.7(@swc/helpers@0.5.13))
-      '@tailwindcss/line-clamp':
-        specifier: ^0.3.1
-        version: 0.3.1(tailwindcss@3.4.3(ts-node@10.9.1(@swc/core@1.5.7(@swc/helpers@0.5.13))(@types/node@18.16.9)(typescript@5.5.4)))
       '@tailwindcss/typography':
         specifier: ^0.5.2
         version: 0.5.10(tailwindcss@3.4.3(ts-node@10.9.1(@swc/core@1.5.7(@swc/helpers@0.5.13))(@types/node@18.16.9)(typescript@5.5.4)))
@@ -2556,14 +2553,6 @@ packages:
         integrity: sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w==,
       }
     engines: { node: '>=10' }
-
-  '@tailwindcss/line-clamp@0.3.1':
-    resolution:
-      {
-        integrity: sha512-pNr0T8LAc3TUx/gxCfQZRe9NB2dPEo/cedPHzUGIPxqDMhgjwNm6jYxww4W5l0zAsAddxr+XfZcqttGiFDgrGg==,
-      }
-    peerDependencies:
-      tailwindcss: '>=2.0.0 || >=3.0.0 || >=3.0.0-alpha.1'
 
   '@tailwindcss/typography@0.5.10':
     resolution:
@@ -14261,10 +14250,6 @@ snapshots:
   '@szmarczak/http-timer@4.0.6':
     dependencies:
       defer-to-connect: 2.0.1
-
-  '@tailwindcss/line-clamp@0.3.1(tailwindcss@3.4.3(ts-node@10.9.1(@swc/core@1.5.7(@swc/helpers@0.5.13))(@types/node@18.16.9)(typescript@5.5.4)))':
-    dependencies:
-      tailwindcss: 3.4.3(ts-node@10.9.1(@swc/core@1.5.7(@swc/helpers@0.5.13))(@types/node@18.16.9)(typescript@5.5.4))
 
   '@tailwindcss/typography@0.5.10(tailwindcss@3.4.3(ts-node@10.9.1(@swc/core@1.5.7(@swc/helpers@0.5.13))(@types/node@18.16.9)(typescript@5.5.4)))':
     dependencies:
