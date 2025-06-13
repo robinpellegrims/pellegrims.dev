@@ -1,5 +1,7 @@
+import { ReactElement } from 'react';
+
 interface GridProps<TProps> {
-  render: (item: TProps) => JSX.Element;
+  render: (item: TProps) => ReactElement;
   items: TProps[];
 }
 
