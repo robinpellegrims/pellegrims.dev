@@ -69,5 +69,6 @@
         "unitTestRunner": "jest"
       }
     }
-  }
+  },
+  "useLegacyCache": true
 }
