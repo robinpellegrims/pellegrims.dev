@@ -49,3 +49,5 @@ migrations.json
 .env
 
 /apps/pellegrims-dev/public/rss/
+
+*.local.md
