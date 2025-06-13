@@ -4,7 +4,7 @@
         <title>Robin Pellegrims</title>
         <link>https://www.pellegrims.dev</link>
         <description>Professional software developer, front-end technical lead and freelance web developer.</description>
-        <lastBuildDate>Sat, 03 Feb 2024 18:30:01 GMT</lastBuildDate>
+        <lastBuildDate>Fri, 13 Jun 2025 18:53:51 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>Feed for Node.js</generator>
         <image>
@@ -12,7 +12,7 @@
             <url>https://www.pellegrims.devhttps://www.pellegrims.dev/avataaar.png</url>
             <link>https://www.pellegrims.dev</link>
         </image>
-        <copyright>All rights reserved 2024, Robin Pellegrims</copyright>
+        <copyright>All rights reserved 2025, Robin Pellegrims</copyright>
         <item>
             <title><![CDATA[Testing a contact form with Cypress]]></title>
             <link>https://www.pellegrims.dev/blog/e2e-contact-form-cypress/</link>
@@ -61,8 +61,7 @@ your actual tests, or you could add them in specific support file.</p>
 
 export const getNameField = (): ChainableInputElement => cy.get('#field-Name');
 export const getMailField = (): ChainableInputElement => cy.get('#field-Email');
-export const getMessageField = (): ChainableInputElement =>
-  cy.get('#field-Message');
+export const getMessageField = (): ChainableInputElement => cy.get('#field-Message');
 export const getForm = () => cy.get('form');
 </code></pre>
 <p>The reason we explicitly define the return type for each of the query functions is that by default, <code>cy.get</code> returns a
@@ -79,16 +78,11 @@ like <a href="https://docs.cypress.io/api/commands/type" target="_blank" rel="no
 <h3>Check validity of fields</h3>
 <p>The fields are all required so they might throw a validation error <code>valueMissing</code>. On top of that, the e-mail
 field might throw a <code>typeMismatch</code> validation error if the entered value is not a valid e-mail address.</p>
-<pre><code>export const assertValueMissing = (field: ChainableInputElement) =>
-  assertValidity(field, { valueMissing: true });
+<pre><code>export const assertValueMissing = (field: ChainableInputElement) => assertValidity(field, { valueMissing: true });
 
-export const assertTypeMismatch = (field: ChainableInputElement) =>
-  assertValidity(field, { typeMismatch: true });
+export const assertTypeMismatch = (field: ChainableInputElement) => assertValidity(field, { typeMismatch: true });
 
-const assertValidity = (
-  field: ChainableInputElement,
-  expectedValidity: { valueMissing?: boolean; typeMismatch?: boolean }
-) =>
+const assertValidity = (field: ChainableInputElement, expectedValidity: { valueMissing?: boolean; typeMismatch?: boolean }) =>
   field.invoke('prop', 'validity').should('deep.include', {
     valueMissing: false,
     typeMismatch: false,
@@ -97,8 +91,7 @@ const assertValidity = (
 </code></pre>
 <h3>Form fields visibility</h3>
 <p>The following function verifies if the fields are visible or hidden:</p>
-<pre><code>export const assertFieldsVisible = (visible: boolean) =>
-  cy.get('input').should(visible ? 'have.length.gt' : 'have.length', 0);
+<pre><code>export const assertFieldsVisible = (visible: boolean) => cy.get('input').should(visible ? 'have.length.gt' : 'have.length', 0);
 </code></pre>
 <h3>Mocking the api call</h3>
 <p>When we submit the form using a POST request in a Cypress test, we don't want to actually send the form data to the api.
@@ -108,15 +101,11 @@ specific response.</p>
 not.</p>
 <pre><code>const submitAlias = 'submit';
 
-export const mockResponseStatusCode = (statusCode: number) =>
-  cy
-    .intercept('POST', 'http://localhost:4200/api/contact', { statusCode })
-    .as(submitAlias);
+export const mockResponseStatusCode = (statusCode: number) => cy.intercept('POST', 'http://localhost:4200/api/contact', { statusCode }).as(submitAlias);
 </code></pre>
 <h3>Checking that the form was submitted</h3>
 <p>To verify if the form data was submitted, the previously assigned alias can be used:</p>
-<pre><code>export const assertSubmitted = (submitted: boolean) =>
-  cy.get(`@${submitAlias}`).should(submitted ? 'not.be.null' : 'be.null');
+<pre><code>export const assertSubmitted = (submitted: boolean) => cy.get(`@${submitAlias}`).should(submitted ? 'not.be.null' : 'be.null');
 </code></pre>
 <h3>Submitting the form</h3>
 <p>There is only one button on the page, so we can just click the first button found to submit the form:</p>
@@ -127,10 +116,7 @@ export const mockResponseStatusCode = (statusCode: number) =>
 <pre><code>describe('contact', () => {
   beforeEach(() => cy.visit('/contact'));
 
-  it('form fields should be empty by default', () =>
-    [getNameField(), getMailField(), getMessageField()].forEach((field) =>
-      field.should('be.empty')
-    ));
+  it('form fields should be empty by default', () => [getNameField(), getMailField(), getMessageField()].forEach((field) => field.should('be.empty')));
 
   it('form fields should have errors for missing fields', () => {
     assertValueMissing(getNameField());
@@ -148,8 +134,7 @@ export const mockResponseStatusCode = (statusCode: number) =>
       mockResponseStatusCode(204);
       clickSubmitButton();
     });
-    it('should not send a POST request to the APi', () =>
-      assertSubmitted(false));
+    it('should not send a POST request to the APi', () => assertSubmitted(false));
     it('should keep the fields visible', () => assertFieldsVisible(true));
   });
 
@@ -160,8 +145,7 @@ export const mockResponseStatusCode = (statusCode: number) =>
       clickSubmitButton();
     });
     it('should send a POST request to the APi', () => assertSubmitted(true));
-    it('should display a success message', () =>
-      getForm().should('contain', 'Message succesfully sent, thank you!'));
+    it('should display a success message', () => getForm().should('contain', 'Message succesfully sent, thank you!'));
     it('should hide the form fields', () => assertFieldsVisible(false));
   });
 
@@ -172,8 +156,7 @@ export const mockResponseStatusCode = (statusCode: number) =>
       clickSubmitButton();
     });
     it('should send a POST request to the APi', () => assertSubmitted(true));
-    it('should display an error message', () =>
-      getForm().should('contain', 'Something went wrong, try again later.'));
+    it('should display an error message', () => getForm().should('contain', 'Something went wrong, try again later.'));
     it('should keep the fields visible', () => assertFieldsVisible(true));
   });
 });
@@ -318,23 +301,14 @@ dialog Data/Result types, a custom dialog service and abstract dialog component 
 <pre><code>@Directive()
 export abstract class StronglyTypedDialog&#x3C;DialogData, DialogResult> {
   protected data: DialogData = inject(MAT_DIALOG_DATA);
-  protected dialogRef: MatDialogRef&#x3C;
-    StronglyTypedDialog&#x3C;DialogData, DialogResult>,
-    DialogResult
-  > = inject(MatDialogRef);
+  protected dialogRef: MatDialogRef&#x3C;StronglyTypedDialog&#x3C;DialogData, DialogResult>, DialogResult> = inject(MatDialogRef);
 }
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
   protected dialog = inject(MatDialog);
 
-  open = &#x3C;DialogData, DialogResult>(
-    component: ComponentType&#x3C;StronglyTypedDialog&#x3C;DialogData, DialogResult>>,
-    config?: MatDialogConfig&#x3C;DialogData>
-  ): MatDialogRef&#x3C;
-    StronglyTypedDialog&#x3C;DialogData, DialogResult>,
-    DialogResult
-  > => this.dialog.open(component, config);
+  open = &#x3C;DialogData, DialogResult>(component: ComponentType&#x3C;StronglyTypedDialog&#x3C;DialogData, DialogResult>>, config?: MatDialogConfig&#x3C;DialogData>): MatDialogRef&#x3C;StronglyTypedDialog&#x3C;DialogData, DialogResult>, DialogResult> => this.dialog.open(component, config);
 }
 </code></pre>
 <p>Since the constructor has been moved to an abstract superclass, the dialog component can then be simplified like this:</p>
