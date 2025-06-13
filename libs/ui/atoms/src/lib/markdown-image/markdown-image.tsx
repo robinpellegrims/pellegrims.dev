@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, ImgHTMLAttributes } from 'react';
 import Image from 'next/image';
 import { ReactMarkdownProps } from 'react-markdown/src/ast-to-react';
 
@@ -9,7 +9,7 @@ const isDefined = <SomeType,>(
 const isString = (value: unknown): value is string => typeof value === 'string';
 
 export const MarkdownImage: FunctionComponent<
-  JSX.IntrinsicElements['img'] & ReactMarkdownProps
+  ImgHTMLAttributes<HTMLImageElement> & ReactMarkdownProps
 > = ({ node, children }) => {
   if (
     isDefined(node.properties) &&
