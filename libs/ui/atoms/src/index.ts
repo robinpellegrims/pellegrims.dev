@@ -19,3 +19,6 @@ export { FormSuccess } from './lib/form-success/form-success';
 export { DateFormatted } from './lib/date-formatted/date-formatted';
 export { CounterDevAnalytics } from './lib/counter-dev-analytics/counter-dev-analytics';
 export { FavIcon } from './lib/favicon/favicon';
+export { InfiniteScroll } from './lib/infinite-scroll/infinite-scroll';
+export type { InfiniteScrollProps } from './lib/infinite-scroll/infinite-scroll';
+export { useInfiniteScroll } from './lib/infinite-scroll/use-infinite-scroll';
