@@ -1,6 +1,6 @@
 import { DateFormatted } from '@pellegrims-dev/ui/atoms';
 import { Tags } from '@pellegrims-dev/ui/molecules';
-import { FunctionComponent, HTMLAttributeAnchorTarget } from 'react';
+import { FunctionComponent, HTMLAttributeAnchorTarget, useState } from 'react';
 import Image from 'next/image';
 import { DateString } from '@pellegrims-dev/markdown';
 
@@ -14,26 +14,36 @@ export interface CardProps {
   created?: DateString;
 }
 
-export const Card: FunctionComponent<CardProps> = (props) => (
-  <div className="flex h-full flex-col overflow-hidden rounded-lg border-2 border-gray-200 border-opacity-60">
-    <div className="relative h-96 md:h-36 lg:h-64">
-      {props.cover.startsWith('/') ? (
-        <Image
-          src={props.cover}
-          alt="cover image"
-          loading="lazy"
-          fill
-          sizes="100vw"
-          style={{ objectFit: 'cover' }}
-        />
+export const Card: FunctionComponent<CardProps> = (props) => {
+  const [imageError, setImageError] = useState(false);
+  const hasValidCover = props.cover && props.cover.trim() !== '' && props.cover !== 'undefined' && props.cover !== 'null' && !imageError;
+
+  return (
+    <div className="flex h-full flex-col overflow-hidden rounded-lg border-2 border-gray-200 border-opacity-60">
+      {hasValidCover ? (
+        <div className="relative h-96 md:h-36 lg:h-64">
+          {props.cover.startsWith('/') ? (
+            <Image
+              src={props.cover}
+              alt="cover image"
+              loading="lazy"
+              fill
+              sizes="100vw"
+              style={{ objectFit: 'cover' }}
+              onError={() => setImageError(true)}
+            />
+          ) : (
+            <img
+              className="h-full w-full object-cover object-center"
+              src={props.cover}
+              loading="lazy"
+              onError={() => setImageError(true)}
+            />
+          )}
+        </div>
       ) : (
-        <img
-          className="h-full w-full object-cover object-center"
-          src={props.cover}
-          loading="lazy"
-        />
+        <div className="h-96 md:h-36 lg:h-64" />
       )}
-    </div>
     <div className="flex flex-grow flex-col gap-3 p-6">
       <Tags tags={props.tags} />
       <h1 className="title-font text-xl font-bold">{props.title}</h1>
@@ -66,5 +76,6 @@ export const Card: FunctionComponent<CardProps> = (props) => (
         ) : null}
       </div>
     </div>
-  </div>
-);
+    </div>
+  );
+};
