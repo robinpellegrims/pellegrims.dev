@@ -69,8 +69,7 @@ export default [
           ],
         },
       ],
-      '@typescript-eslint/no-extra-semi': 'error',
-      'no-extra-semi': 'off',
+      'no-extra-semi': 'error',
     },
   },
 
@@ -95,8 +94,7 @@ export default [
           ],
         },
       ],
-      '@typescript-eslint/no-extra-semi': 'error',
-      'no-extra-semi': 'off',
+      'no-extra-semi': 'error',
     },
   },
 

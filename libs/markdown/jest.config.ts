@@ -1,7 +1,8 @@
 /* eslint-disable */
-export default {
+module.exports = {
   displayName: 'markdown',
   preset: '../../jest.preset.js',
+  passWithNoTests: true,
   transform: {
     '^.+\\.[tj]sx?$': [
       '@swc/jest',

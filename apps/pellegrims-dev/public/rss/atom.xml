@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://www.pellegrims.dev/</id>
     <title>Robin Pellegrims</title>
-    <updated>2025-10-21T20:01:17.918Z</updated>
+    <updated>2026-02-13T11:18:13.298Z</updated>
     <generator>Feed for Node.js</generator>
     <author>
         <name>Robin Pellegrims</name>
@@ -13,7 +13,7 @@
     <subtitle>Professional software developer, front-end technical lead and freelance web developer.</subtitle>
     <logo>https://www.pellegrims.devhttps://www.pellegrims.dev/avataaar.png</logo>
     <icon>https://www.pellegrims.dev/favicon-32x32.png</icon>
-    <rights>All rights reserved 2025, Robin Pellegrims</rights>
+    <rights>All rights reserved 2026, Robin Pellegrims</rights>
     <entry>
         <title type="html"><![CDATA[Testing a contact form with Cypress]]></title>
         <id>https://www.pellegrims.dev/blog/e2e-contact-form-cypress/</id>
