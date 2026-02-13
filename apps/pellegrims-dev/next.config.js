@@ -11,7 +11,12 @@ const nextConfig = {
     svgr: false,
   },
   images: {
-    domains: ['avataaars.io'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'avataaars.io',
+      },
+    ],
   },
   trailingSlash: true,
   i18n: {

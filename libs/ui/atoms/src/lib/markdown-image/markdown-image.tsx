@@ -1,4 +1,4 @@
-import { FunctionComponent, ImgHTMLAttributes } from 'react';
+import { ImgHTMLAttributes, ReactElement } from 'react';
 import Image from 'next/image';
 import { ReactMarkdownProps } from 'react-markdown/src/ast-to-react';
 
@@ -8,9 +8,13 @@ const isDefined = <SomeType,>(
 
 const isString = (value: unknown): value is string => typeof value === 'string';
 
-export const MarkdownImage: FunctionComponent<
-  ImgHTMLAttributes<HTMLImageElement> & ReactMarkdownProps
-> = ({ node, children }) => {
+type MarkdownImageProps = ImgHTMLAttributes<HTMLImageElement> &
+  ReactMarkdownProps;
+
+export const MarkdownImage = ({
+  node,
+  children,
+}: MarkdownImageProps): ReactElement => {
   if (
     isDefined(node.properties) &&
     isString(node.properties['alt']) &&

@@ -34,8 +34,10 @@ const OLD_ENV = process.env;
 
 const createNextApiMocks = (
   requestBody: ContactApiRequestBody
-): { req: NextApiRequest; res: NextApiResponse } =>
-  createMocks({ body: requestBody });
+): {
+  req: NextApiRequest;
+  res: NextApiResponse;
+} => createMocks({ body: requestBody });
 
 describe('/api/contact', () => {
   beforeEach(() => {
@@ -81,6 +83,6 @@ describe('/api/contact', () => {
     process.env = { ...OLD_ENV, ...defaultEnv };
     const { req, res } = createNextApiMocks(defaultRequestBody);
     await contact(req, res);
-    expect(sendMailMock).toBeCalledTimes(1);
+    expect(sendMailMock).toHaveBeenCalledTimes(1);
   });
 });

@@ -23,8 +23,7 @@ describe('InfiniteScroll', () => {
         <div>Test content</div>
       </InfiniteScroll>
     );
-
-    expect(screen.getByText('Test content')).toBeInTheDocument();
+    expect(screen.getByText('Test content')).toBeTruthy();
   });
 
   it('should show loading indicator when loading', () => {
@@ -33,22 +32,20 @@ describe('InfiniteScroll', () => {
         <div>Test content</div>
       </InfiniteScroll>
     );
-
-    expect(screen.getByText('Loading more...')).toBeInTheDocument();
+    expect(screen.getByText('Loading more...')).toBeTruthy();
   });
 
   it('should show custom loading indicator when provided', () => {
     render(
-      <InfiniteScroll 
-        {...defaultProps} 
+      <InfiniteScroll
+        {...defaultProps}
         isLoading={true}
         loadingIndicator={<div>Custom loading...</div>}
       >
         <div>Test content</div>
       </InfiniteScroll>
     );
-
-    expect(screen.getByText('Custom loading...')).toBeInTheDocument();
+    expect(screen.getByText('Custom loading...')).toBeTruthy();
   });
 
   it('should not show loading indicator when hasNextPage is false and not loading', () => {
@@ -57,7 +54,6 @@ describe('InfiniteScroll', () => {
         <div>Test content</div>
       </InfiniteScroll>
     );
-
-    expect(screen.queryByText('Loading more...')).not.toBeInTheDocument();
+    expect(screen.queryByText('Loading more...')).toBeNull();
   });
 });

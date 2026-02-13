@@ -1,5 +1,5 @@
 /* eslint-disable */
-export default {
+module.exports = {
   displayName: 'ui-atoms',
   preset: '../../../jest.preset.js',
   transform: {

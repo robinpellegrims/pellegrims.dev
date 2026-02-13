@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-
 import { CounterDevAnalytics } from './counter-dev-analytics';
 
 describe('CounterDevAnalytics', () => {
