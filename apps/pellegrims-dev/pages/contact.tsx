@@ -9,7 +9,13 @@ const title = 'Contact';
 export const Contact = () => (
   <PageTemplate
     seoProps={{ title }}
-    header={<PageHero title={title} description="Leave me a message!" />}
+    header={
+      <PageHero
+        eyebrow="Work Together"
+        title={title}
+        description="Tell me what you are building and where you need support. I reply to serious inquiries quickly."
+      />
+    }
   >
     <FormContainer
       actionUrl="/api/contact"

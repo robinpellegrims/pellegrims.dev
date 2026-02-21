@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://www.pellegrims.dev/</id>
     <title>Robin Pellegrims</title>
-    <updated>2026-02-13T12:47:15.346Z</updated>
+    <updated>2026-02-21T12:10:00.366Z</updated>
     <generator>Feed for Node.js</generator>
     <author>
         <name>Robin Pellegrims</name>
@@ -10,8 +10,8 @@
     </author>
     <link rel="alternate" href="https://www.pellegrims.dev"/>
     <link rel="self" href="https://www.pellegrims.dev/rss/atom.xml"/>
-    <subtitle>Professional software developer, front-end technical lead and freelance web developer.</subtitle>
-    <logo>https://www.pellegrims.devhttps://www.pellegrims.dev/avataaar.png</logo>
+    <subtitle>Frontend specialist delivering end-to-end full-stack solutions.</subtitle>
+    <logo>https://www.pellegrims.devhttps://www.pellegrims.dev/avatar.png</logo>
     <icon>https://www.pellegrims.dev/favicon-32x32.png</icon>
     <rights>All rights reserved 2026, Robin Pellegrims</rights>
     <entry>

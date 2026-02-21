@@ -53,6 +53,7 @@ export const Bookmarks: NextPage<
     <PageTemplate
       header={
         <PageHero
+          eyebrow="Curated Links"
           title={title}
           description="Collection of links to articles and other resources I recently liked."
         />

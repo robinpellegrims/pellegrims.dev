@@ -5,9 +5,9 @@ type ButtonType = 'primary' | 'secondary';
 
 const buttonTypeClasses: Record<ButtonType, string> = {
   primary:
-    'text-white bg-primary-600 hover:bg-primary-700 disabled:bg-primary-500',
+    'bg-ink text-canvas shadow-[0_10px_35px_-18px_rgba(31,33,38,0.85)] hover:-translate-y-0.5 hover:bg-ink/90 disabled:bg-ink/70',
   secondary:
-    'text-dark-700 bg-gray-100 hover:bg-gray-200 ml-4 disabled:text-dark-600',
+    'ml-4 border border-ink/25 bg-white/75 text-ink hover:-translate-y-0.5 hover:border-accent/60 hover:text-accent disabled:text-ink/60',
 };
 
 interface ButtonProps {
@@ -22,7 +22,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
   text,
 }) => (
   <button
-    className={`inline-flex rounded border-0 py-2 px-6 text-lg focus:outline-none disabled:cursor-not-allowed ${buttonTypeClasses[type]}`}
+    className={`inline-flex items-center gap-2 rounded-full border-0 px-6 py-3 text-sm font-semibold uppercase tracking-[0.18em] transition focus:outline-none disabled:cursor-not-allowed ${buttonTypeClasses[type]}`}
     disabled={loading}
   >
     {loading ? (

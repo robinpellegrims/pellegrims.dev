@@ -9,14 +9,14 @@ interface HeaderProps {
 }
 
 export const Header: FunctionComponent<HeaderProps> = ({ links }) => (
-  <Container>
-    <header>
-      <div className="flex flex-col items-center gap-3 py-6 md:flex-row">
-        <Link href="/">
+  <header className="sticky top-0 z-20 border-b border-ink/10 bg-canvas/85 backdrop-blur">
+    <Container>
+      <div className="flex flex-col items-center gap-4 py-5 md:flex-row md:justify-between">
+        <Link href="/" className="group">
           <Logo />
         </Link>
         <Nav links={links} />
       </div>
-    </header>
-  </Container>
+    </Container>
+  </header>
 );

@@ -10,7 +10,7 @@ export const NavItem: FunctionComponent<NavItemProps> = ({ text, href }) => (
   <Link
     key={href}
     href={href}
-    className="hover:text-dark-900 mr-5 dark:hover:text-white"
+    className="rounded-full border border-transparent px-3 py-1.5 transition hover:border-ink/20 hover:bg-white/70 hover:text-ink"
   >
     {text}
   </Link>

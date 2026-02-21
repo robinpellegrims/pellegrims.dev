@@ -18,7 +18,7 @@ type InputFieldProps = FormFieldProps<'input'>;
 type TextAreaFieldProps = FormFieldProps<'textarea'>;
 
 const inputClassNames =
-  'w-full bg-dark-50 dark:bg-dark-700 bg-opacity-50 rounded border border-gray-300 focus:border-primary-500 focus:bg-white dark:focus:bg-dark-600 focus:ring-2 focus:ring-primary-200 text-base outline-none text-dark-700 dark:text-dark-200 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out';
+  'w-full rounded-xl border border-ink/15 bg-white/80 px-3 py-2.5 text-base leading-7 text-ink outline-none transition duration-200 ease-in-out placeholder:text-ink/35 focus:border-accent/55 focus:ring-2 focus:ring-accent/20';
 
 export const FormField: FunctionComponent<
   InputFieldProps | TextAreaFieldProps
@@ -26,7 +26,10 @@ export const FormField: FunctionComponent<
   const inputId = `field-${props.label}`;
   return (
     <div>
-      <label htmlFor={inputId} className="text-sm leading-7">
+      <label
+        htmlFor={inputId}
+        className="mb-2 inline-block text-xs font-semibold uppercase tracking-[0.14em] text-ink/70"
+      >
         {props.label}
       </label>
       {props.type === 'input' ? (

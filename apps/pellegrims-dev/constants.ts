@@ -13,11 +13,9 @@ export const canonicalOrigin = `https://${canonicalDomain}`;
 const firstName = 'Robin';
 const lastName = 'Pellegrims';
 export const name = `${firstName} ${lastName}`;
-export const avataaarUrl =
-  'https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortFlat&accessoriesType=Blank&hairColor=BrownDark&facialHairType=BeardLight&facialHairColor=BrownDark&clotheType=Hoodie&clotheColor=Red&eyeType=Happy&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light';
 export const description =
-  'Professional software developer, front-end technical lead and freelance web developer.';
-export const avatarPngUrl = `${getCurrentOrigin()}/avataaar.png`;
+  'Frontend specialist delivering end-to-end full-stack solutions.';
+export const avatarPngUrl = `${getCurrentOrigin()}/avatar.png`;
 export const defaultSeoConfig: NextSeoProps = {
   defaultTitle: name,
   description,

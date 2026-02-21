@@ -18,8 +18,9 @@ const Snippets: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     seoProps={{ title: 'Snippets' }}
     header={
       <PageHero
+        eyebrow="Code Snippets"
         title="Snippets"
-        description="Short notes for future reference."
+        description="Compact technical references, patterns, and reminders I reuse in day-to-day engineering work."
       />
     }
   >

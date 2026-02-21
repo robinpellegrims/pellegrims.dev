@@ -8,7 +8,7 @@ const Profile = () => (
   <div tw="flex flex-row items-center">
     <img
       tw="w-24 rounded-full mr-4"
-      src="https://www.pellegrims.dev/avataaar.png"
+      src="https://www.pellegrims.dev/avatar.png"
       alt="avatar"
     />
     <div tw="flex flex-col justify-center">
