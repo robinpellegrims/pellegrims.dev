@@ -19,8 +19,9 @@ const Blog: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     seoProps={{ title }}
     header={
       <PageHero
+        eyebrow="Articles"
         title={title}
-        description="Articles about things that I found interesting enough to share."
+        description="Long-form notes on engineering decisions, product craft, and lessons learned while shipping software."
       />
     }
   >

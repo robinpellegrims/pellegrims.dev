@@ -6,7 +6,7 @@ import { name } from '../constants';
 
 const Index: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = () => (
   <Container>
-    <HomeHero imageSrc="/avataaar.svg" name={name} contactPath="/contact" />
+    <HomeHero imageSrc="/avatar.png" name={name} contactPath="/contact" />
   </Container>
 );
 

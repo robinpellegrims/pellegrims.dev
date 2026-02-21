@@ -55,13 +55,15 @@ const Article: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         ],
       }}
     />
-    <Container>
-      <BlogArticle
-        markDown={markDown}
-        twitterUserName={twitterUserName}
-        urlToShare={buildBlogArticleUrlToShare(markDown.slug)}
-      />
-    </Container>
+    <section className="pb-20 pt-10">
+      <Container>
+        <BlogArticle
+          markDown={markDown}
+          twitterUserName={twitterUserName}
+          urlToShare={buildBlogArticleUrlToShare(markDown.slug)}
+        />
+      </Container>
+    </section>
   </>
 );
 

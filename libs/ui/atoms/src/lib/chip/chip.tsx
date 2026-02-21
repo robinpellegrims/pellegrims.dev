@@ -5,7 +5,7 @@ interface ChipProps {
 }
 
 export const Chip: FunctionComponent<ChipProps> = (props) => (
-  <span className="bg-primary-50 text-primary-600 inline-block rounded py-1 px-2 text-xs font-medium tracking-widest">
+  <span className="inline-block rounded-full border border-accent/25 bg-accent/10 px-2.5 py-1 text-[0.64rem] font-semibold tracking-[0.12em] text-accent">
     {props.text}
   </span>
 );

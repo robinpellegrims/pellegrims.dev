@@ -5,5 +5,7 @@ interface ContainerProps {
 }
 
 export const Container: FunctionComponent<ContainerProps> = (props) => (
-  <div className="container px-6">{props.children}</div>
+  <div className="mx-auto w-full max-w-6xl px-5 sm:px-8 lg:px-10">
+    {props.children}
+  </div>
 );
