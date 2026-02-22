@@ -4,9 +4,9 @@ This file provides implementation guidance for coding agents working in this rep
 
 ## Scope
 
-- Repository: `pellegrims.dev` (Nx monorepo)
-- Main app: `apps/pellegrims-dev` (Next.js, Pages Router)
-- Shared libraries: `libs/ui/*`, `libs/markdown`
+- Repository: `pellegrims.dev` (standard Next.js app)
+- Main app: repository root (Next.js, Pages Router)
+- Shared UI and utilities: `components/ui/*`, `lib/markdown`
 
 ## Prerequisites
 
@@ -16,48 +16,39 @@ This file provides implementation guidance for coding agents working in this rep
 ## Core Commands
 
 ```bash
-# Main app
-nx dev pellegrims-dev
-nx build pellegrims-dev
-nx lint pellegrims-dev
-nx test pellegrims-dev
-
-# Libraries / e2e
-nx test ui-atoms
-nx e2e pellegrims-dev-e2e
-
-# Workspace-wide
-nx affected:test
-nx format:check
-nx format:write
+pnpm dev
+pnpm build
+pnpm lint
+pnpm test
+pnpm typecheck
 ```
 
 ## Architecture Notes
 
-- Stack: Next.js 15, React 19, TypeScript 5, Tailwind CSS 3, Nx 21.
-- App routing is in `apps/pellegrims-dev/pages` (Pages Router conventions).
-- UI follows atomic design layers in `libs/ui/{atoms,molecules,organisms,templates}`.
-- Markdown/content utilities are in `libs/markdown`.
+- Stack: Next.js 16, React 19, TypeScript 5, Tailwind CSS 3.
+- App routing is in `pages` (Pages Router conventions).
+- UI follows atomic design layers in `components/ui/{atoms,molecules,organisms,templates}`.
+- Markdown/content utilities are in `lib/markdown`.
 
 ## Import Conventions
 
 Prefer workspace aliases over relative deep paths.
 
 ```typescript
-import { Button } from '@pellegrims-dev/ui/atoms';
-import { Header } from '@pellegrims-dev/ui/organisms';
+import { Button } from '@/components/ui/atoms/button/button';
+import { Header } from '@/components/ui/organisms/header/header';
 ```
 
 ## Content and Assets
 
-- Blog content: `apps/pellegrims-dev/content/blog`
-- Snippets: `apps/pellegrims-dev/content/snippets`
-- Public assets: `apps/pellegrims-dev/public/assets`
-- RSS output: `apps/pellegrims-dev/public/rss`
+- Blog content: `content/blog`
+- Snippets: `content/snippets`
+- Public assets: `public/assets`
+- RSS output: `public/rss`
 
 ## Contact API and Environment
 
-Contact API handler: `apps/pellegrims-dev/pages/api/contact.ts`.
+Contact API handler: `pages/api/contact.ts`.
 
 Required environment variables:
 
@@ -75,7 +66,6 @@ If any are missing, the API returns HTTP 500.
 ## Testing Guidance
 
 - Unit and integration tests use Jest and React Testing Library.
-- E2E tests use Cypress (`apps/pellegrims-dev-e2e`).
 - Prefer targeted tests first, then broaden only when needed.
 
 ## Agent Working Rules
