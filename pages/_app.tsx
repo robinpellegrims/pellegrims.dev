@@ -1,4 +1,4 @@
-import 'tailwindcss/tailwind.css';
+import '@/styles/globals.css';
 import { Footer } from '@/components/ui/organisms/footer/footer';
 import { Header } from '@/components/ui/organisms/header/header';
 import {

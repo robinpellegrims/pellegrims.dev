@@ -14,7 +14,7 @@ interface FooterProps {
 
 export const Footer: FunctionComponent<FooterProps> = (props) => (
   <Container>
-    <footer className="mt-8 border-t border-ink/10 py-10">
+    <footer className="mt-8 border-t border-white/[0.06] py-10">
       <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
         <span className="inline-flex gap-2">
         <SocialIconLink
