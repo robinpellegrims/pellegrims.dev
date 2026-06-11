@@ -7,7 +7,7 @@ interface NavProps {
 }
 
 export const Nav: FunctionComponent<NavProps> = ({ links }) => (
-  <nav className="flex flex-wrap items-center justify-center gap-2 text-sm font-medium tracking-[0.16em] uppercase text-ink/70 md:justify-end">
+  <nav className="flex flex-wrap items-center justify-center gap-2 text-sm font-medium tracking-[0.16em] uppercase text-ink/60 md:justify-end">
     {links.map((link) => (
       <NavItem key={link.href} {...link} />
     ))}

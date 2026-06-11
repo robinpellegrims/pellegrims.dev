@@ -22,7 +22,7 @@ export const BlogArticle: FunctionComponent<BlogArticleProps> = ({
 }) => (
   <article className="mx-auto w-full max-w-3xl">
     <header className="flex flex-col">
-      <div className="mb-6 flex flex-col gap-3 border-b border-ink/10 pb-6">
+      <div className="mb-6 flex flex-col gap-3 border-b border-white/[0.06] pb-6">
         <div className="flex w-full flex-wrap items-center justify-between gap-2 text-sm text-ink/65">
           <span className="font-mono uppercase tracking-[0.08em]">
             {markDown.frontMatter.date ? (
@@ -49,7 +49,7 @@ export const BlogArticle: FunctionComponent<BlogArticleProps> = ({
         {markDown.frontMatter.title}
       </h1>
       {markDown.frontMatter.coverImage ? (
-        <div className="relative mb-8 mt-8 h-[21rem] overflow-hidden rounded-2xl border border-ink/10 sm:h-[31rem]">
+        <div className="relative mb-8 mt-8 h-[21rem] overflow-hidden rounded-2xl border border-white/[0.06] sm:h-[31rem]">
           <Image
             src={markDown.frontMatter.coverImage}
             alt="cover image"
@@ -61,17 +61,17 @@ export const BlogArticle: FunctionComponent<BlogArticleProps> = ({
         </div>
       ) : null}
     </header>
-    <div className="prose prose-neutral mt-8 max-w-none prose-headings:font-display prose-headings:text-ink prose-p:text-ink/85 prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-accent/60 prose-blockquote:text-ink/70 prose-strong:text-ink prose-pre:bg-transparent prose-pre:p-0 prose-pre:shadow-none">
+    <div className="prose prose-neutral mt-8 max-w-none prose-headings:font-display prose-headings:text-ink prose-p:text-ink/85 prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-accent/60 prose-blockquote:text-ink/70 prose-strong:text-ink prose-pre:bg-transparent prose-pre:p-0 prose-pre:shadow-none prose-code:text-accent-bright prose-hr:border-white/[0.06]">
       <Markdown markDown={markDown} />
     </div>
     {urlToShare ? (
-      <footer className="mt-16 border-t border-ink/10 pt-6">
+      <footer className="mt-16 border-t border-white/[0.06] pt-6">
         <Link
           href={`https://twitter.com/intent/tweet?text=${markDown.frontMatter.title}&via=${twitterUserName}&url=${urlToShare}`}
           rel="noopener noreferrer"
           target="_blank"
           aria-label={shareOnTwitter}
-          className="inline-flex items-center gap-2 rounded-full border border-ink/20 bg-white/80 px-4 py-2 text-sm font-medium text-ink transition hover:border-accent/60 hover:text-accent"
+          className="inline-flex items-center gap-2 rounded-full border border-white/[0.1] bg-white/[0.04] px-4 py-2 text-sm font-medium text-ink transition hover:border-accent/40 hover:text-accent"
         >
           <SocialIcon type="twitter" />
           {shareOnTwitter}

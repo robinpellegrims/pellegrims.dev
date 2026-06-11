@@ -24,7 +24,7 @@ export const Card: FunctionComponent<CardProps> = (props) => {
     !imageError;
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white/85 shadow-[0_20px_50px_-45px_rgba(31,33,38,0.95)] transition hover:-translate-y-1 hover:border-accent/35">
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-surface/80 shadow-[0_20px_60px_-30px_rgba(201,145,60,0.08)] transition hover:-translate-y-1 hover:border-accent/30">
       {hasValidCover ? (
         <div className="relative h-64 sm:h-72 md:h-52 lg:h-60">
           {props.cover.startsWith('/') ? (
@@ -46,7 +46,7 @@ export const Card: FunctionComponent<CardProps> = (props) => {
           )}
         </div>
       ) : (
-        <div className="h-64 sm:h-72 md:h-52 lg:h-60 bg-mist/35" />
+        <div className="h-64 sm:h-72 md:h-52 lg:h-60 bg-surface-bright" />
       )}
       <div className="flex flex-grow flex-col gap-4 p-6">
         <Tags tags={props.tags} />

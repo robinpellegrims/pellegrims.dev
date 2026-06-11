@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "sourceMap": true,
     "declaration": false,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2017",
     "module": "esnext",

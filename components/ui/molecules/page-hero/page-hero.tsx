@@ -13,7 +13,7 @@ export const PageHero: FunctionComponent<HeroPageProps> = ({
   description,
   eyebrow,
 }) => (
-  <div className="mb-10 flex w-full flex-col items-center border-b border-ink/10 pb-8 pt-5 text-center sm:pb-10">
+  <div className="mb-10 flex w-full flex-col items-center border-b border-white/[0.06] pb-8 pt-5 text-center sm:pb-10">
     {eyebrow ? (
       <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-accent">
         {eyebrow}

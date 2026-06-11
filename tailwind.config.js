@@ -1,5 +1,4 @@
-const colors = require('tailwindcss/colors');
-
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx}',
@@ -12,26 +11,70 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        body: ["'Manrope', sans-serif"],
-        display: ["'Fraunces', serif"],
-        mono: ["'IBM Plex Mono', monospace"],
+        body: ["'Archivo', sans-serif"],
+        display: ["'Cormorant Garamond', serif"],
+        mono: ["'JetBrains Mono', monospace"],
       },
       colors: {
-        primary: colors.blue,
-        dark: colors.zinc,
-        canvas: '#f7f3ea',
-        ink: '#1f2126',
-        accent: '#9d5e2f',
-        mist: '#e7decd',
+        canvas: '#09090b',
+        surface: '#141419',
+        'surface-bright': '#1c1c24',
+        ink: '#e8e4dd',
+        'ink-muted': '#7a7670',
+        accent: '#c9913c',
+        'accent-bright': '#e8b866',
+        mist: '#1e1e26',
+      },
+      borderColor: {
+        DEFAULT: 'rgba(255, 255, 255, 0.06)',
       },
       keyframes: {
         'fade-up': {
-          '0%': { opacity: '0', transform: 'translateY(18px)' },
+          '0%': { opacity: '0', transform: 'translateY(24px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'glow-pulse': {
+          '0%, 100%': { opacity: '0.4' },
+          '50%': { opacity: '0.8' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-8px)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
         },
       },
       animation: {
-        'fade-up': 'fade-up 700ms ease-out',
+        'fade-up': 'fade-up 700ms ease-out both',
+        'glow-pulse': 'glow-pulse 4s ease-in-out infinite',
+        float: 'float 6s ease-in-out infinite',
+        shimmer: 'shimmer 3s ease-in-out infinite',
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            '--tw-prose-body': '#e8e4dd',
+            '--tw-prose-headings': '#e8e4dd',
+            '--tw-prose-lead': '#b0aca5',
+            '--tw-prose-links': '#c9913c',
+            '--tw-prose-bold': '#e8e4dd',
+            '--tw-prose-counters': '#7a7670',
+            '--tw-prose-bullets': '#7a7670',
+            '--tw-prose-hr': 'rgba(255, 255, 255, 0.06)',
+            '--tw-prose-quotes': '#b0aca5',
+            '--tw-prose-quote-borders': 'rgba(201, 145, 60, 0.4)',
+            '--tw-prose-captions': '#7a7670',
+            '--tw-prose-code': '#e8b866',
+            '--tw-prose-pre-code': '#e8e4dd',
+            '--tw-prose-pre-bg': '#141419',
+            '--tw-prose-th-borders': 'rgba(255, 255, 255, 0.1)',
+            '--tw-prose-td-borders': 'rgba(255, 255, 255, 0.06)',
+            color: 'var(--tw-prose-body)',
+            maxWidth: 'none',
+          },
+        },
       },
     },
   },
