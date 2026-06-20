@@ -1,16 +1,34 @@
 import contact, { ContactApiRequestBody } from '../pages/api/contact';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { createMocks } from 'node-mocks-http';
-import nodemailer from 'nodemailer';
-import { mocked } from 'jest-mock';
+import { sendEmailViaSmtp } from '../utils/cloudflare';
 
-jest.mock('nodemailer');
-const nodeMailerMock = mocked(nodemailer, true);
+class MockResponse {
+  status: number;
+  constructor(public body: any, public init: any) {
+    this.status = init?.status || 200;
+  }
+}
+global.Response = MockResponse as any;
 
-const sendMailMock = jest.fn().mockImplementation((_, callback) => callback());
-nodeMailerMock.createTransport = jest.fn().mockReturnValue({
-  sendMail: sendMailMock,
-});
+class MockNextRequest {
+  method: string;
+  constructor(public url: string, public options: any) {
+    this.method = options?.method || 'GET';
+  }
+  async json() {
+    return JSON.parse(this.options.body);
+  }
+}
+jest.mock('next/server', () => ({
+  NextRequest: MockNextRequest
+}));
+import { getCloudflareEnv } from '../utils/cloudflare';
+
+jest.mock('../utils/cloudflare', () => ({
+  sendEmailViaSmtp: jest.fn(),
+  getCloudflareEnv: () => process.env
+}));
+
+const sendEmailViaSmtpMock = sendEmailViaSmtp as jest.Mock;
 
 const defaultRequestBody: ContactApiRequestBody = {
   email: 'name@domain.com',
@@ -18,59 +36,55 @@ const defaultRequestBody: ContactApiRequestBody = {
   name: 'name',
 };
 
-/* eslint-disable @typescript-eslint/naming-convention */
 const defaultEnv = {
   SMTP_PORT: '1234',
   SMTP_HOST: 'Host',
   SMTP_USER: 'User',
   SMTP_PASS: 'Password',
-  SMTP_DKIM_DOMAIN: 'domain',
-  SMTP_DKIM_KEY_SELECTOR: 'selector',
-  SMTP_DKIM_PRIVATE_KEY: 'private key',
+  CONTACT_MAIL_TO: 'to@domain.com'
 };
-/* eslint-enable @typescript-eslint/naming-convention */
 
-const OLD_ENV = process.env;
-const mailEnvVarsToReset = [
-  'SMTP_PORT',
-  'SMTP_HOST',
-  'SMTP_USER',
-  'SMTP_PASS',
-  'SMTP_DKIM_DOMAIN',
-  'SMTP_DKIM_KEY_SELECTOR',
-  'SMTP_DKIM_PRIVATE_KEY',
-  'CONTACT_MAIL_TO',
-] as const;
-
-const createNextApiMocks = (
-  requestBody: ContactApiRequestBody
-): {
-  req: NextApiRequest;
-  res: NextApiResponse;
-} => createMocks({ body: requestBody });
+const createRequest = (body: any) => {
+  return new MockNextRequest('http://localhost/api/contact', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  }) as any;
+};
 
 describe('/api/contact', () => {
+  const OLD_ENV = process.env;
+
   beforeEach(() => {
     process.env = { ...OLD_ENV };
-    for (const envVar of mailEnvVarsToReset) {
+    for (const envVar of Object.keys(defaultEnv)) {
       delete process.env[envVar];
     }
+    jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    process.env = OLD_ENV;
+  });
+
+  test('should respond with 405 for non-POST requests', async () => {
+    const req = new MockNextRequest('http://localhost/api/contact', { method: 'GET' }) as any;
+    const res = await contact(req);
+    expect(res.status).toBe(405);
   });
 
   test('should respond with 204 when hidden field is added ', async () => {
-    const { req, res } = createNextApiMocks({
-      a991396704f746f4ba5d4f88aa13e524: 'true',
-    });
-    await contact(req, res);
-    expect(res.statusCode).toBe(204);
+    const req = createRequest({ a991396704f746f4ba5d4f88aa13e524: 'true' });
+    const res = await contact(req);
+    expect(res.status).toBe(204);
   });
 
   describe('should respond with 400 when fields are missing', () => {
     test.each(['name', 'email', 'message'] as string[])('%s', async (field) => {
-      const { [field]: removedProperty, ...requestBody } = defaultRequestBody;
-      const { req, res } = createNextApiMocks(requestBody);
-      await contact(req, res);
-      expect(res.statusCode).toBe(400);
+      const { [field as keyof ContactApiRequestBody]: removedProperty, ...requestBody } = defaultRequestBody;
+      const req = createRequest(requestBody);
+      const res = await contact(req);
+      expect(res.status).toBe(400);
     });
   });
 
@@ -80,22 +94,21 @@ describe('/api/contact', () => {
       'SMTP_HOST',
       'SMTP_USER',
       'SMTP_PASS',
-      'SMTP_DKIM_DOMAIN',
-      'SMTP_DKIM_KEY_SELECTOR',
-      'SMTP_DKIM_PRIVATE_KEY',
+      'CONTACT_MAIL_TO',
     ] as string[])('%s', async (missingVar) => {
-      const { [missingVar]: removedProperty, ...processEnv } = defaultEnv;
+      const { [missingVar as keyof typeof defaultEnv]: removedProperty, ...processEnv } = defaultEnv;
       process.env = { ...process.env, ...processEnv };
-      const { req, res } = createNextApiMocks(defaultRequestBody);
-      await contact(req, res);
-      expect(res.statusCode).toBe(500);
+      const req = createRequest(defaultRequestBody);
+      const res = await contact(req);
+      expect(res.status).toBe(500);
     });
   });
 
   test('should send the mail', async () => {
     process.env = { ...OLD_ENV, ...defaultEnv };
-    const { req, res } = createNextApiMocks(defaultRequestBody);
-    await contact(req, res);
-    expect(sendMailMock).toHaveBeenCalledTimes(1);
+    const req = createRequest(defaultRequestBody);
+    const res = await contact(req);
+    expect(sendEmailViaSmtpMock).toHaveBeenCalledTimes(1);
+    expect(res.status).toBe(204);
   });
 });

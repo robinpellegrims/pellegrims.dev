@@ -1,4 +1,4 @@
-import { PrismAsync as SyntaxHighlighter } from 'react-syntax-highlighter';
+import SyntaxHighlighter from 'react-syntax-highlighter/dist/cjs/prism-async';
 import { darcula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { CodeComponent } from 'react-markdown/src/ast-to-react';
 

@@ -1,9 +1,6 @@
 const nextConfig = {
   trailingSlash: true,
-  i18n: {
-    locales: ['en'],
-    defaultLocale: 'en',
-  },
+  serverExternalPackages: ['three', '@react-three/fiber'],
 };
 
 module.exports = nextConfig;

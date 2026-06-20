@@ -3,7 +3,7 @@ import { ImageResponse } from '@vercel/og';
 import { NextRequest } from 'next/server';
 import { oGImageHeight, oGImageWidth } from '../../constants';
 
-export const config = { runtime: 'edge' };
+export const runtime = 'edge';
 
 const ogImageHandler = (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
