@@ -1,4 +1,6 @@
 import { getRequestContext } from '@cloudflare/next-on-pages';
+// @ts-ignore
+import { connect } from 'cloudflare:sockets';
 
 export function getCloudflareEnv(): any {
   return getRequestContext().env;
@@ -20,13 +22,11 @@ export interface EmailMessage {
 }
 
 export async function sendEmailViaSmtp(config: SmtpConfig, email: EmailMessage): Promise<void> {
-  const socketsModuleId = 'cloudflare:sockets';
-  const cloudflareSockets = await Function(`return import("${socketsModuleId}")`)();
-  const { connect } = cloudflareSockets;
+
 
   // Use implicit TLS since the user originally set `secure: true` in nodemailer
   const socket = connect(`${config.host}:${config.port}`, {
-    secureTransport: 'starttls',
+    secureTransport: 'on',
     allowHalfOpen: false,
   });
 
