@@ -1,6 +1,11 @@
 import { FunctionComponent, ReactElement } from 'react';
 import { ThreeCanvas } from '@/components/ui/atoms/three/three-canvas';
-import { ParticleField } from '@/components/ui/atoms/three/particle-field';
+import dynamic from 'next/dynamic';
+
+const ParticleField = dynamic(
+  () => import('@/components/ui/atoms/three/particle-field').then((mod) => mod.ParticleField),
+  { ssr: false }
+);
 
 interface HomeTemplateProps {
   header: ReactElement;

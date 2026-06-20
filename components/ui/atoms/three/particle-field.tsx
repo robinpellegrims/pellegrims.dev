@@ -1,8 +1,7 @@
-/* eslint-disable react-hooks/purity */
 'use client';
 
-import { useRef, useMemo } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useRef, useMemo, useEffect } from 'react';
+import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 interface ParticleFieldProps {
@@ -13,8 +12,50 @@ interface ParticleFieldProps {
   spread?: number;
 }
 
+// Module-level factories — outside React render, so Math.random() is allowed
+function buildParticleArrays(
+  count: number,
+  color: string,
+  accentColor: string,
+  size: number,
+  spread: number
+) {
+  const positions = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
+  const sizes = new Float32Array(count);
+  const baseColor = new THREE.Color(color);
+  const accentCol = new THREE.Color(accentColor);
+
+  for (let i = 0; i < count; i++) {
+    const i3 = i * 3;
+    positions[i3] = (Math.random() - 0.5) * spread;
+    positions[i3 + 1] = (Math.random() - 0.5) * spread * 0.8;
+    positions[i3 + 2] = (Math.random() - 0.5) * spread * 0.4;
+
+    const isAccent = Math.random() < 0.15;
+    const col = isAccent ? accentCol : baseColor;
+    colors[i3] = col.r;
+    colors[i3 + 1] = col.g;
+    colors[i3 + 2] = col.b;
+
+    sizes[i] = (Math.random() * 0.5 + 0.5) * size;
+  }
+  return { positions, colors, sizes };
+}
+
+function buildVelocities(count: number): Float32Array {
+  const v = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    const i3 = i * 3;
+    v[i3] = (Math.random() - 0.5) * 0.015;
+    v[i3 + 1] = (Math.random() - 0.5) * 0.015;
+    v[i3 + 2] = (Math.random() - 0.5) * 0.015;
+  }
+  return v;
+}
+
 export const ParticleField = ({
-  count = 200, // Lower count for network performance
+  count = 200,
   color = '#e8e4dd',
   accentColor = '#c9913c',
   size = 2.0,
@@ -25,40 +66,17 @@ export const ParticleField = ({
   const linesRef = useRef<THREE.LineSegments>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
 
-  // Initialize network nodes
-  const { positions, velocities, colors, sizes } = useMemo(() => {
-    const positions = new Float32Array(count * 3);
-    const velocities = new Float32Array(count * 3);
-    const colors = new Float32Array(count * 3);
-    const sizes = new Float32Array(count);
-    const baseColor = new THREE.Color(color);
-    const accentCol = new THREE.Color(accentColor);
+  // Recompute particle data only when props change
+  const { positions, colors, sizes } = useMemo(
+    () => buildParticleArrays(count, color, accentColor, size, spread),
+    [count, color, accentColor, size, spread]
+  );
 
-    for (let i = 0; i < count; i++) {
-      const i3 = i * 3;
-      // Scatter in a wider, flatter space
-      positions[i3] = (Math.random() - 0.5) * spread;
-      positions[i3 + 1] = (Math.random() - 0.5) * spread * 0.8;
-      positions[i3 + 2] = (Math.random() - 0.5) * spread * 0.4;
-
-      // Random very slow drift
-      velocities[i3] = (Math.random() - 0.5) * 0.015;
-      velocities[i3 + 1] = (Math.random() - 0.5) * 0.015;
-      velocities[i3 + 2] = (Math.random() - 0.5) * 0.015;
-
-      const isAccent = Math.random() < 0.15;
-      const col = isAccent ? accentCol : baseColor;
-      colors[i3] = col.r;
-      colors[i3 + 1] = col.g;
-      colors[i3 + 2] = col.b;
-
-      sizes[i] = (Math.random() * 0.5 + 0.5) * size;
-    }
-    return { positions, velocities, colors, sizes };
-  }, [count, color, accentColor, size, spread]);
+  // Velocities stored in a ref so they can be mutated each frame
+  const velocitiesRef = useRef<Float32Array>(buildVelocities(count));
 
   // Track mouse
-  useMemo(() => {
+  useEffect(() => {
     if (typeof window === 'undefined') return;
     const handler = (e: MouseEvent) => {
       mouseRef.current.x = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -72,17 +90,16 @@ export const ParticleField = ({
     if (!pointsRef.current || !linesRef.current || !groupRef.current) return;
 
     const pos = pointsRef.current.geometry.attributes.position.array as Float32Array;
+    const velocities = velocitiesRef.current as Float32Array;
     
-    // Max lines possible: count * (count - 1) / 2
-    // We'll update a dynamic array for the line positions
-    const linePositions = [];
+    const linePositions: number[] = [];
     const maxDist = 6.0; // Connection distance threshold
     const maxDistSq = maxDist * maxDist;
 
     // Update node positions and build network connections
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
-      
+
       // Move node
       pos[i3] += velocities[i3];
       pos[i3 + 1] += velocities[i3 + 1];

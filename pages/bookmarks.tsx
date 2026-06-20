@@ -9,10 +9,10 @@ import { Card } from '@/components/ui/organisms/card/card';
 import type { CardProps } from '@/components/ui/organisms/card/card';
 import { PageHero } from '@/components/ui/molecules/page-hero/page-hero';
 import { InfiniteScroll } from '@/components/ui/atoms/infinite-scroll/infinite-scroll';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 export interface BookmarksProps {
-  allBookmarks: CardProps[];
+  initialBookmarks: CardProps[];
   perPage: number;
 }
 
@@ -20,11 +20,28 @@ const title = 'Bookmarks';
 
 export const Bookmarks: NextPage<
   InferGetStaticPropsType<typeof getStaticProps>
-> = ({ allBookmarks, perPage }) => {
+> = ({ initialBookmarks, perPage }) => {
+  const [allBookmarks, setAllBookmarks] = useState<CardProps[]>(initialBookmarks);
   const [displayedBookmarks, setDisplayedBookmarks] = useState<CardProps[]>(() =>
     allBookmarks.slice(0, perPage)
   );
   const [isLoading, setIsLoading] = useState(false);
+
+  // Fetch fresh bookmarks on the client
+  useEffect(() => {
+    fetch('/api/bookmarks')
+      .then((res) => res.json() as Promise<CardProps[]>)
+      .then((data) => {
+        if (data && data.length > 0) {
+          setAllBookmarks(data);
+          setDisplayedBookmarks((prev) => {
+            // Only update displayed if we are at the top, or expand it
+            return data.slice(0, Math.max(prev.length, perPage));
+          });
+        }
+      })
+      .catch((err) => console.error('Failed to fetch fresh bookmarks:', err));
+  }, [perPage]);
 
   const currentBookmarks = useMemo(() => {
     return allBookmarks.slice(0, displayedBookmarks.length || perPage);
@@ -37,7 +54,6 @@ export const Bookmarks: NextPage<
 
     setIsLoading(true);
 
-    // Simulate network delay for smooth UX
     setTimeout(() => {
       const currentLength = currentBookmarks.length;
       const nextBatch = allBookmarks.slice(currentLength, currentLength + perPage);
@@ -75,7 +91,7 @@ export const Bookmarks: NextPage<
 export default Bookmarks;
 
 export const getStaticProps: GetStaticProps<BookmarksProps> = async () => {
-  const perPage = 30; // Items per page
+  const perPage = 30;
 
   try {
     const allBookmarks = await fetchAllRaindropBookmarks();
@@ -83,21 +99,18 @@ export const getStaticProps: GetStaticProps<BookmarksProps> = async () => {
 
     return {
       props: {
-        allBookmarks: formattedBookmarks,
+        initialBookmarks: formattedBookmarks,
         perPage,
       },
-      revalidate: 3600, // Revalidate every hour
     };
   } catch (error) {
     console.error('Failed to fetch bookmarks for static generation:', error);
 
-    // Return empty state when API fails
     return {
       props: {
-        allBookmarks: [],
+        initialBookmarks: [],
         perPage,
       },
-      revalidate: 60, // Retry after 1 minute on error
     };
   }
 };

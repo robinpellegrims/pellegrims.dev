@@ -39,13 +39,15 @@ function buildRaindropUrl({
 }
 
 export async function fetchRaindropBookmarks(
-  params: PaginationParams = {}
+  params: PaginationParams = {},
+  token?: string
 ): Promise<RaindropResponse> {
   const url = buildRaindropUrl(params);
+  const resolvedToken = token || process.env.RAINDROP_ACCESS_TOKEN;
   const res = await fetch(url, {
     method: 'get',
     headers: new Headers({
-      Authorization: `Bearer ${process.env.RAINDROP_ACCESS_TOKEN}`,
+      Authorization: `Bearer ${resolvedToken}`,
     }),
   });
 
@@ -94,7 +96,7 @@ export function formatBookmarkForDisplay(bookmark: RaindropBookmark): CardProps 
 /**
  * Fetches all bookmarks across all pages for static generation
  */
-export async function fetchAllRaindropBookmarks(): Promise<RaindropBookmark[]> {
+export async function fetchAllRaindropBookmarks(token?: string): Promise<RaindropBookmark[]> {
   const allBookmarks: RaindropBookmark[] = [];
   let page = 0;
   let hasMore = true;
@@ -104,7 +106,7 @@ export async function fetchAllRaindropBookmarks(): Promise<RaindropBookmark[]> {
       const response = await fetchRaindropBookmarks({
         page,
         perpage: 50, // Use max page size
-      });
+      }, token);
 
       allBookmarks.push(...response.items);
       

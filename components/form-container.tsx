@@ -57,7 +57,7 @@ export const FormContainer: FunctionComponent<FormContainerProps> = ({
     if (!response.ok) {
       await response
         .json()
-        .then(({ error }) => handleError(error))
+        .then((data: any) => handleError(data.error))
         .catch(() => handleError(response.statusText));
     }
 
