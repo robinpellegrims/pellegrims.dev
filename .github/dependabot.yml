@@ -9,6 +9,8 @@ updates:
       time: "09:00"
       timezone: "Europe/Brussels"
     open-pull-requests-limit: 10
+    assignees:
+      - "robinpellegrims"
     cooldown:
       default-days: 5
       semver-major-days: 30
