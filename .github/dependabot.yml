@@ -1,0 +1,139 @@
+version: 2
+
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Brussels"
+    open-pull-requests-limit: 10
+    cooldown:
+      default-days: 5
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    groups:
+      security-patches:
+        applies-to: "security-updates"
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+          - "minor"
+      nextjs:
+        dependency-type: "production"
+        patterns:
+          - "next"
+        update-types:
+          - "patch"
+          - "minor"
+      react:
+        dependency-type: "production"
+        patterns:
+          - "react"
+          - "react-dom"
+        update-types:
+          - "patch"
+          - "minor"
+      three:
+        dependency-type: "production"
+        patterns:
+          - "three"
+          - "@react-three/*"
+        update-types:
+          - "patch"
+          - "minor"
+      react-types:
+        dependency-type: "development"
+        patterns:
+          - "@types/react"
+          - "@types/react-dom"
+        update-types:
+          - "patch"
+          - "minor"
+      three-types:
+        dependency-type: "development"
+        patterns:
+          - "@types/three"
+        update-types:
+          - "patch"
+          - "minor"
+      linting:
+        dependency-type: "development"
+        patterns:
+          - "eslint"
+          - "eslint-*"
+          - "@eslint/*"
+          - "@typescript-eslint/*"
+          - "prettier"
+        update-types:
+          - "patch"
+          - "minor"
+      testing:
+        dependency-type: "development"
+        patterns:
+          - "jest"
+          - "jest-*"
+          - "babel-jest"
+          - "ts-jest"
+          - "@types/jest"
+          - "@testing-library/*"
+          - "node-mocks-http"
+        update-types:
+          - "patch"
+          - "minor"
+      styling:
+        dependency-type: "development"
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/*"
+          - "postcss"
+          - "autoprefixer"
+        update-types:
+          - "patch"
+          - "minor"
+      markdown:
+        dependency-type: "production"
+        patterns:
+          - "gray-matter"
+          - "react-markdown"
+          - "remark"
+          - "remark-*"
+          - "unist-util-*"
+          - "reading-time"
+          - "feed"
+        update-types:
+          - "patch"
+          - "minor"
+      typescript:
+        dependency-type: "development"
+        patterns:
+          - "typescript"
+          - "ts-node"
+          - "@types/node"
+        update-types:
+          - "patch"
+          - "minor"
+      runtime-helpers:
+        dependency-type: "production"
+        patterns:
+          - "tslib"
+        update-types:
+          - "patch"
+          - "minor"
+      cloudflare:
+        dependency-type: "development"
+        patterns:
+          - "wrangler"
+          - "@cloudflare/*"
+        update-types:
+          - "patch"
+          - "minor"
