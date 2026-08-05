@@ -1,8 +1,9 @@
 import SyntaxHighlighter from 'react-syntax-highlighter/dist/cjs/prism-async';
 import { darcula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import type { Components } from 'react-markdown';
+import type { ExtraProps } from 'react-markdown';
+import type { HTMLAttributes } from 'react';
 
-type CodeProps = NonNullable<Components['code']>;
+type CodeProps = HTMLAttributes<HTMLElement> & ExtraProps & { inline?: boolean };
 
 export const CodeBlock = ({ className, children, inline }: CodeProps) => {
   const language = className?.split('-')[1];
@@ -12,13 +13,7 @@ export const CodeBlock = ({ className, children, inline }: CodeProps) => {
     </code>
   ) : (
     <div className="not-prose my-6 overflow-hidden rounded-xl border border-white/[0.06] shadow-[0_18px_36px_-20px_rgba(201,145,60,0.1)]">
-      <SyntaxHighlighter
-        language={language}
-        showLineNumbers={true}
-        lineNumberStyle={{ color: '#8e95a3', minWidth: '2.25em', paddingRight: '0.9em' }}
-        customStyle={{ backgroundColor: '#141419', margin: 0, padding: '1rem 1.1rem', fontSize: '0.95rem', lineHeight: '1.6' }}
-        style={darcula}
-      >
+      <SyntaxHighlighter language={language} showLineNumbers={true} lineNumberStyle={{ color: '#8e95a3', minWidth: '2.25em', paddingRight: '0.9em' }} customStyle={{ backgroundColor: '#141419', margin: 0, padding: '1rem 1.1rem', fontSize: '0.95rem', lineHeight: '1.6' }} style={darcula}>
         {children}
       </SyntaxHighlighter>
     </div>
