@@ -41,7 +41,7 @@ const buildFeedOptions = (siteURL: string): FeedOptions => {
     description,
     id: `${siteURL}/`,
     link: siteURL,
-    image: `${siteURL}${avatarPngUrl}`,
+    image: avatarPngUrl,
     favicon: `${siteURL}/favicon-32x32.png`,
     copyright: `All rights reserved ${date.getFullYear()}, ${name}`,
     updated: date,
