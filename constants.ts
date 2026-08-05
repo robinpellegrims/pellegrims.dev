@@ -1,4 +1,4 @@
-import { NextSeoProps } from 'next-seo';
+import type { NextSeoProps } from 'next-seo/pages';
 import { getCurrentOrigin } from './utils/url';
 
 export const facebookUserName = 'robin.pellegrims';
