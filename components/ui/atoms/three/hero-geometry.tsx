@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/purity */
 'use client';
 
-import { useRef, useMemo } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -17,8 +17,7 @@ export const HeroGeometry = ({
   const outerRingRef = useRef<THREE.Points>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
 
-  // Track mouse for interactive rotation
-  useMemo(() => {
+  useEffect(() => {
     if (typeof window === 'undefined') return;
     const handler = (e: MouseEvent) => {
       mouseRef.current.x = (e.clientX / window.innerWidth - 0.5) * 2;
