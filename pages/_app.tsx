@@ -10,7 +10,8 @@ import {
   name,
   twitterUrl,
 } from '../constants';
-import { DefaultSeo } from 'next-seo';
+import Head from 'next/head';
+import { generateDefaultSeo } from 'next-seo/pages';
 import { useRouter } from 'next/router';
 import { AppProps } from 'next/app';
 import { NextPage } from 'next';
@@ -26,10 +27,12 @@ const headerNavLinks: { text: string; href: string }[] = [
 
 const App: NextPage<AppProps> = ({ Component, pageProps }) => (
   <>
-    <DefaultSeo
-      {...defaultSeoConfig}
-      canonical={canonicalOrigin + useRouter().pathname}
-    />
+    <Head>
+      {generateDefaultSeo({
+        ...defaultSeoConfig,
+        canonical: canonicalOrigin + useRouter().pathname,
+      })}
+    </Head>
     <CounterDevAnalytics user="RobinPel" />
     <HomeTemplate
       header={<Header links={headerNavLinks} />}

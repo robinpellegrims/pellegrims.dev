@@ -1,7 +1,7 @@
 import { FunctionComponent, ReactElement } from 'react';
-import { NextSeo } from 'next-seo';
+import Head from 'next/head';
+import { generateNextSeo, NextSeoProps } from 'next-seo/pages';
 import { Container } from '../container/container';
-import { NextSeoProps } from 'next-seo/lib/types';
 
 interface PageTemplateProps {
   seoProps: NextSeoProps;
@@ -15,7 +15,7 @@ export const PageTemplate: FunctionComponent<PageTemplateProps> = ({
   children,
 }) => (
   <>
-    <NextSeo {...seoProps} />
+    <Head>{generateNextSeo(seoProps)}</Head>
     <section className="relative pb-20 pt-6 sm:pt-10">
       <Container>
         <div className="relative">

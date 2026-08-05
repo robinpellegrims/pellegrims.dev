@@ -13,7 +13,8 @@ import { ParsedUrlQuery } from 'querystring';
 import { oGImageHeight, oGImageWidth, twitterUserName } from '../../constants';
 import { BlogArticle } from '@/components/ui/organisms/blog-article/blog-article';
 import { Container } from '@/components/ui/templates/container/container';
-import { NextSeo } from 'next-seo';
+import Head from 'next/head';
+import { generateNextSeo } from 'next-seo/pages';
 import {
   buildBlogArticleUrlToShare,
   buildCanonicalBlogArticleUrl,
@@ -35,26 +36,28 @@ const Article: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   markDown,
 }) => (
   <>
-    <NextSeo
-      title={markDown.frontMatter.title}
-      description={markDown.frontMatter.description}
-      canonical={buildCanonicalBlogArticleUrl(slug)}
-      openGraph={{
-        type: 'article',
-        images: [
-          {
-            height: oGImageHeight,
-            width: oGImageWidth,
-            url: buildOgImageUrl({
-              date: markDown.frontMatter.date,
-              description: markDown.frontMatter.description,
-              readMinutes: markDown.readingTimeMins,
-              title: markDown.frontMatter.title,
-            }),
-          },
-        ],
-      }}
-    />
+    <Head>
+      {generateNextSeo({
+        title: markDown.frontMatter.title,
+        description: markDown.frontMatter.description,
+        canonical: buildCanonicalBlogArticleUrl(slug),
+        openGraph: {
+          type: 'article',
+          images: [
+            {
+              height: oGImageHeight,
+              width: oGImageWidth,
+              url: buildOgImageUrl({
+                date: markDown.frontMatter.date,
+                description: markDown.frontMatter.description,
+                readMinutes: markDown.readingTimeMins,
+                title: markDown.frontMatter.title,
+              }),
+            },
+          ],
+        },
+      })}
+    </Head>
     <section className="pb-20 pt-10">
       <Container>
         <BlogArticle
