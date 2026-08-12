@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "format:check": "prettier --check .",
+    "format:check": "prettier --check .github/workflows/ci.yml package.json",
     "test": "jest",
     "typecheck": "tsc --noEmit"
   },
