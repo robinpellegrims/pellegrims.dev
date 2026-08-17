@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.13.16",
-    "@cloudflare/workers-types": "^5.20260706.1",
+    "@cloudflare/workers-types": "^5.20260810.1",
     "@eslint/compat": "^2.1.0",
     "@eslint/eslintrc": "^3.3.6",
     "@eslint/js": "^9.29.0",
@@ -52,7 +52,7 @@
     "autoprefixer": "10.5.4",
     "babel-jest": "30.4.1",
     "eslint": "9.29.0",
-    "eslint-config-next": "16.3.0",
+    "eslint-config-next": "16.3.1",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-jsx-a11y": "6.10.2",
@@ -68,7 +68,7 @@
     "ts-jest": "29.4.12",
     "ts-node": "10.9.2",
     "typescript": "5.9.3",
-    "wrangler": "^4.115.0"
+    "wrangler": "^4.120.0"
   },
   "pnpm": {
     "overrides": {
