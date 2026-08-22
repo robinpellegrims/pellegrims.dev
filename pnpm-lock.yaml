@@ -104,8 +104,8 @@ importers:
         specifier: 19.2.4
         version: 19.2.4(@types/react@19.2.18)
       '@types/react-syntax-highlighter':
-        specifier: ^13.5.2
-        version: 13.5.2
+        specifier: ^15.5.13
+        version: 15.5.13
       '@types/three':
         specifier: ^0.185.4
         version: 0.185.4
@@ -1829,8 +1829,8 @@ packages:
     peerDependencies:
       '@types/react': '*'
 
-  '@types/react-syntax-highlighter@13.5.2':
-    resolution: {integrity: sha512-sRZoKZBGKaE7CzMvTTgz+0x/aVR58ZYUTfB7HN76vC+yQnvo1FWtzNARBt0fGqcLGEVakEzMu/CtPzssmanu8Q==}
+  '@types/react-syntax-highlighter@15.5.13':
+    resolution: {integrity: sha512-uLGJ87j6Sz8UaBAooU0T6lWJ0dBmjZgN1PZTrj05TNql2/XpC6+4HhMT5syIdFUUt+FASfCeLLv4kBygNU+8qA==}
 
   '@types/react@19.2.18':
     resolution: {integrity: sha512-AnzbBERsrLKtk2XSfTbYRLjQPdy116Sty4q+T+Bp3IC4l6jNBvreVPAHmpq9qhXQM7CXZPjLVmGMw9sy+hxQ3w==}
@@ -2946,6 +2946,7 @@ packages:
   eslint@9.29.0:
     resolution: {integrity: sha512-GsGizj2Y1rCWDu6XoEekL3RLilp0voSePurjZIkxL3wlm5o5EC9VpgaP7lrCvjnkuLvzFBQWB3vWB3K5KQTveQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -6999,7 +7000,7 @@ snapshots:
     dependencies:
       '@types/react': 19.2.18
 
-  '@types/react-syntax-highlighter@13.5.2':
+  '@types/react-syntax-highlighter@15.5.13':
     dependencies:
       '@types/react': 19.2.18
 
