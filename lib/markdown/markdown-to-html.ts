@@ -10,7 +10,9 @@ export const markdownToHtml = (
 ): string =>
   remark()
     .use(externalLinks, { target: '_blank', rel: ['noreferrer'] })
-    .use(remarkHtml)
+    // remark-html 16 uses unified 11 while remark 14 uses unified 10. The
+    // plugin contract is unchanged at runtime; bridge the duplicate types.
+    .use(remarkHtml as unknown as Parameters<ReturnType<typeof remark>['use']>[0])
     .use(fixImages, { absolutePath })
     .processSync(markdown)
     .toString();
