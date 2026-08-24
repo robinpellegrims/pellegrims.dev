@@ -7,6 +7,7 @@ type CodeProps = HTMLAttributes<HTMLElement> & ExtraProps & { inline?: boolean }
 
 export const CodeBlock = ({ className, children, inline }: CodeProps) => {
   const language = className?.split('-')[1];
+  const code = Array.isArray(children) ? children.map(String).join('') : String(children ?? '');
   return inline ? (
     <code className="rounded bg-surface-bright px-1 py-0.5 font-mono text-[0.92em] text-ink">
       {children}
@@ -14,7 +15,7 @@ export const CodeBlock = ({ className, children, inline }: CodeProps) => {
   ) : (
     <div className="not-prose my-6 overflow-hidden rounded-xl border border-white/[0.06] shadow-[0_18px_36px_-20px_rgba(201,145,60,0.1)]">
       <SyntaxHighlighter language={language} showLineNumbers={true} lineNumberStyle={{ color: '#8e95a3', minWidth: '2.25em', paddingRight: '0.9em' }} customStyle={{ backgroundColor: '#141419', margin: 0, padding: '1rem 1.1rem', fontSize: '0.95rem', lineHeight: '1.6' }} style={darcula}>
-        {children}
+        {code}
       </SyntaxHighlighter>
     </div>
   );
