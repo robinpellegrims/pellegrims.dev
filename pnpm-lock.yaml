@@ -104,8 +104,8 @@ importers:
         specifier: 19.2.7
         version: 19.2.7(@types/react@19.2.18)
       '@types/react-syntax-highlighter':
-        specifier: ^13.5.2
-        version: 13.5.2
+        specifier: ^15.5.13
+        version: 15.5.13
       '@types/three':
         specifier: ^0.185.4
         version: 0.185.4
@@ -1983,8 +1983,8 @@ packages:
     peerDependencies:
       '@types/react': '*'
 
-  '@types/react-syntax-highlighter@13.5.2':
-    resolution: {integrity: sha512-sRZoKZBGKaE7CzMvTTgz+0x/aVR58ZYUTfB7HN76vC+yQnvo1FWtzNARBt0fGqcLGEVakEzMu/CtPzssmanu8Q==}
+  '@types/react-syntax-highlighter@15.5.13':
+    resolution: {integrity: sha512-uLGJ87j6Sz8UaBAooU0T6lWJ0dBmjZgN1PZTrj05TNql2/XpC6+4HhMT5syIdFUUt+FASfCeLLv4kBygNU+8qA==}
 
   '@types/react@19.2.18':
     resolution: {integrity: sha512-AnzbBERsrLKtk2XSfTbYRLjQPdy116Sty4q+T+Bp3IC4l6jNBvreVPAHmpq9qhXQM7CXZPjLVmGMw9sy+hxQ3w==}
@@ -7309,7 +7309,7 @@ snapshots:
     dependencies:
       '@types/react': 19.2.18
 
-  '@types/react-syntax-highlighter@13.5.2':
+  '@types/react-syntax-highlighter@15.5.13':
     dependencies:
       '@types/react': 19.2.18
 
