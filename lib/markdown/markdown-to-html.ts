@@ -7,13 +7,22 @@ import { Visitor } from 'unist-util-visit/complex-types';
 export const markdownToHtml = (
   markdown: string,
   absolutePath: string,
-): string =>
-  remark()
+): string => {
+  const processor = remark()
     .use(externalLinks, { target: '_blank', rel: ['noreferrer'] })
-    .use(remarkHtml)
+    // Adapt remark-html 16's unified 11 processor to remark 14's unified 10.
+    .use(function () {
+      Reflect.apply(remarkHtml, this, []);
+    })
     .use(fixImages, { absolutePath })
-    .processSync(markdown)
-    .toString();
+    .freeze();
+
+  // unified 11 plugins set `compiler`; unified 10 reads `Compiler`.
+  processor.Compiler = (
+    processor as typeof processor & { compiler: typeof processor.Compiler }
+  ).compiler;
+  return processor.processSync(markdown).toString();
+};
 
 type UnistNode = Parameters<typeof visit>[0];
 
