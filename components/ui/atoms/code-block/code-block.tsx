@@ -8,6 +8,9 @@ type CodeProps = HTMLAttributes<HTMLElement> &
 
 export const CodeBlock = ({ className, children, inline }: CodeProps) => {
   const language = className?.split('-')[1];
+  const code = Array.isArray(children)
+    ? children.map(String).join('')
+    : String(children ?? '');
   return inline ? (
     <code className="rounded bg-surface-bright px-1 py-0.5 font-mono text-[0.92em] text-ink">
       {children}
@@ -31,7 +34,7 @@ export const CodeBlock = ({ className, children, inline }: CodeProps) => {
         }}
         style={darcula}
       >
-        {children}
+        {code}
       </SyntaxHighlighter>
     </div>
   );
