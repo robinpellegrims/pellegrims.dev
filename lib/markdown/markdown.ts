@@ -10,14 +10,14 @@ import readingTime from 'reading-time';
 
 export const getMarkdownDocumentBySlug = (
   slug: string,
-  postsPath: string
+  postsPath: string,
 ): MarkdownDocument => {
   const postFilePath = join(postsPath, `${slug}.md`);
   return { ...getMarkdownDocument(postFilePath), slug };
 };
 
 export const getMarkdownDocuments = (
-  directoryPath: string
+  directoryPath: string,
 ): MarkdownDocument[] =>
   getSlugsForMarkdownFiles(directoryPath).map((slug) => ({
     ...getMarkdownDocumentBySlug(slug, directoryPath),

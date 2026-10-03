@@ -19,7 +19,7 @@ describe('BlogArticle', () => {
         twitterUserName={''}
         urlToShare={''}
         twitterSvgIcon={''}
-      />
+      />,
     );
     expect(baseElement).toBeTruthy();
   });

@@ -2,7 +2,7 @@ import type { BlogArticleProps } from '@/components/ui/organisms/blog-article/bl
 
 export const sortArticlesByDateDesc = (
   article1: BlogArticleProps,
-  article2: BlogArticleProps
+  article2: BlogArticleProps,
 ) => {
   const date1 = article1.markDown.frontMatter.date;
   const date2 = article2.markDown.frontMatter.date;

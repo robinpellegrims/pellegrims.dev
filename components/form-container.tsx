@@ -35,7 +35,7 @@ export const FormContainer: FunctionComponent<FormContainerProps> = ({
 
     const data = formFieldNames.reduce(
       (result, name) => ({ ...result, [name]: fields[name].value }),
-      {}
+      {},
     );
 
     const options = {

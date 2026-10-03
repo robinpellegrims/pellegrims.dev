@@ -21,7 +21,7 @@ describe('InfiniteScroll', () => {
     render(
       <InfiniteScroll {...defaultProps}>
         <div>Test content</div>
-      </InfiniteScroll>
+      </InfiniteScroll>,
     );
     expect(screen.getByText('Test content')).toBeTruthy();
   });
@@ -30,7 +30,7 @@ describe('InfiniteScroll', () => {
     render(
       <InfiniteScroll {...defaultProps} isLoading={true}>
         <div>Test content</div>
-      </InfiniteScroll>
+      </InfiniteScroll>,
     );
     expect(screen.getByText('Loading more...')).toBeTruthy();
   });
@@ -43,7 +43,7 @@ describe('InfiniteScroll', () => {
         loadingIndicator={<div>Custom loading...</div>}
       >
         <div>Test content</div>
-      </InfiniteScroll>
+      </InfiniteScroll>,
     );
     expect(screen.getByText('Custom loading...')).toBeTruthy();
   });
@@ -52,7 +52,7 @@ describe('InfiniteScroll', () => {
     render(
       <InfiniteScroll {...defaultProps} hasNextPage={false}>
         <div>Test content</div>
-      </InfiniteScroll>
+      </InfiniteScroll>,
     );
     expect(screen.queryByText('Loading more...')).toBeNull();
   });

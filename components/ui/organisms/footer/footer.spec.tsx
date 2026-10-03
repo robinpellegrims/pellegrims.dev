@@ -14,7 +14,7 @@ describe('Footer', () => {
         twitterUrl=""
         githubSvgIcon=""
         githubUrl=""
-      />
+      />,
     );
     expect(baseElement).toBeTruthy();
   });

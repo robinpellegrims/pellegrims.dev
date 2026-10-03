@@ -40,7 +40,7 @@ function buildRaindropUrl({
 
 export async function fetchRaindropBookmarks(
   params: PaginationParams = {},
-  token?: string
+  token?: string,
 ): Promise<RaindropResponse> {
   const url = buildRaindropUrl(params);
   const resolvedToken = token || process.env.RAINDROP_ACCESS_TOKEN;
@@ -55,7 +55,7 @@ export async function fetchRaindropBookmarks(
     const errorText = await res.text();
     console.error(`Raindrop API error (${res.status}):`, errorText);
     throw new Error(
-      `Failed to fetch bookmarks: ${res.status} ${res.statusText}`
+      `Failed to fetch bookmarks: ${res.status} ${res.statusText}`,
     );
   }
 
@@ -85,7 +85,9 @@ export async function fetchRaindropBookmarks(
 /**
  * Transforms a raw RaindropBookmark into CardProps format for display components
  */
-export function formatBookmarkForDisplay(bookmark: RaindropBookmark): CardProps {
+export function formatBookmarkForDisplay(
+  bookmark: RaindropBookmark,
+): CardProps {
   return {
     ...bookmark,
     created: bookmark.created.slice(0, 10) as DateString,
@@ -96,20 +98,25 @@ export function formatBookmarkForDisplay(bookmark: RaindropBookmark): CardProps 
 /**
  * Fetches all bookmarks across all pages for static generation
  */
-export async function fetchAllRaindropBookmarks(token?: string): Promise<RaindropBookmark[]> {
+export async function fetchAllRaindropBookmarks(
+  token?: string,
+): Promise<RaindropBookmark[]> {
   const allBookmarks: RaindropBookmark[] = [];
   let page = 0;
   let hasMore = true;
 
   while (hasMore) {
     try {
-      const response = await fetchRaindropBookmarks({
-        page,
-        perpage: 50, // Use max page size
-      }, token);
+      const response = await fetchRaindropBookmarks(
+        {
+          page,
+          perpage: 50, // Use max page size
+        },
+        token,
+      );
 
       allBookmarks.push(...response.items);
-      
+
       // If we got less than 50 items, we've reached the end
       hasMore = response.items.length === 50;
       page++;

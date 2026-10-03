@@ -15,7 +15,7 @@ describe('HomeTemplate', () => {
         header={<>Header</>}
         content={<>Content</>}
         footer={<>Footer</>}
-      />
+      />,
     );
     expect(baseElement).toBeTruthy();
   });

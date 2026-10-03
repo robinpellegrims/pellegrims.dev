@@ -21,9 +21,10 @@ const title = 'Bookmarks';
 export const Bookmarks: NextPage<
   InferGetStaticPropsType<typeof getStaticProps>
 > = ({ initialBookmarks, perPage }) => {
-  const [allBookmarks, setAllBookmarks] = useState<CardProps[]>(initialBookmarks);
-  const [displayedBookmarks, setDisplayedBookmarks] = useState<CardProps[]>(() =>
-    allBookmarks.slice(0, perPage)
+  const [allBookmarks, setAllBookmarks] =
+    useState<CardProps[]>(initialBookmarks);
+  const [displayedBookmarks, setDisplayedBookmarks] = useState<CardProps[]>(
+    () => allBookmarks.slice(0, perPage),
   );
   const [isLoading, setIsLoading] = useState(false);
 
@@ -56,7 +57,10 @@ export const Bookmarks: NextPage<
 
     setTimeout(() => {
       const currentLength = currentBookmarks.length;
-      const nextBatch = allBookmarks.slice(currentLength, currentLength + perPage);
+      const nextBatch = allBookmarks.slice(
+        currentLength,
+        currentLength + perPage,
+      );
       setDisplayedBookmarks((prev) => [...prev, ...nextBatch]);
       setIsLoading(false);
     }, 300);

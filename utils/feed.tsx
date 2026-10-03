@@ -1,7 +1,5 @@
 import { Feed, FeedOptions, Item } from 'feed';
-import {
-  getMarkdownDocuments,
-} from '@/lib/markdown/markdown';
+import { getMarkdownDocuments } from '@/lib/markdown/markdown';
 import type { MarkdownDocument } from '@/lib/markdown/markdown.model';
 import { markdownToHtml } from '@/lib/markdown/markdown-to-html';
 import {
@@ -24,7 +22,7 @@ export const generateRssFeed = async () => {
   const feedOptions = buildFeedOptions(siteURL);
   const feed = new Feed(feedOptions);
   const feedItems = await Promise.all(
-    posts.map((post) => mapPostOnFeedItem(post, siteURL))
+    posts.map((post) => mapPostOnFeedItem(post, siteURL)),
   );
   feedItems.forEach((item) => feed.addItem(item));
   const publicRssFolderPath = `./public/${rssFolder}`;

@@ -8,15 +8,13 @@ export const runtime = 'edge';
 const ogImageHandler = (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
   return new ImageResponse(
-    (
-      <OGImage
-        title={searchParams.get('title') ?? ''}
-        date={searchParams.get('date') ?? ''}
-        description={searchParams.get('description') ?? ''}
-        readMinutes={searchParams.get('readMinutes') ?? ''}
-      />
-    ),
-    { width: oGImageWidth, height: oGImageHeight, debug: false }
+    <OGImage
+      title={searchParams.get('title') ?? ''}
+      date={searchParams.get('date') ?? ''}
+      description={searchParams.get('description') ?? ''}
+      readMinutes={searchParams.get('readMinutes') ?? ''}
+    />,
+    { width: oGImageWidth, height: oGImageHeight, debug: false },
   );
 };
 

@@ -12,7 +12,7 @@ export const Highlight: FunctionComponent<HighlightProps> = ({
 }) => {
   const animationDurationPerChar = 30;
   const animationDuration = Math.floor(
-    animationDurationPerChar * children.length
+    animationDurationPerChar * children.length,
   );
   return (
     <RoughNotation

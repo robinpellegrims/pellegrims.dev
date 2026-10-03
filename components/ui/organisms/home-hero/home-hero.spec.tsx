@@ -8,7 +8,7 @@ describe('HomeHero', () => {
         contactPath="google.com"
         name="John Doe"
         imageSrc="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg"
-      />
+      />,
     );
     expect(baseElement).toBeTruthy();
   });

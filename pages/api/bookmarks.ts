@@ -1,5 +1,8 @@
 import type { NextRequest } from 'next/server';
-import { fetchAllRaindropBookmarks, formatBookmarkForDisplay } from '@/utils/raindrop';
+import {
+  fetchAllRaindropBookmarks,
+  formatBookmarkForDisplay,
+} from '@/utils/raindrop';
 import { getCloudflareEnv } from '@/utils/cloudflare';
 
 export const runtime = 'edge';
@@ -11,7 +14,8 @@ export default async function bookmarks(req: NextRequest) {
 
   try {
     const env = getCloudflareEnv();
-    const token = env?.RAINDROP_ACCESS_TOKEN || process.env.RAINDROP_ACCESS_TOKEN;
+    const token =
+      env?.RAINDROP_ACCESS_TOKEN || process.env.RAINDROP_ACCESS_TOKEN;
     const allBookmarks = await fetchAllRaindropBookmarks(token);
     const formattedBookmarks = allBookmarks.map(formatBookmarkForDisplay);
 
@@ -24,12 +28,15 @@ export default async function bookmarks(req: NextRequest) {
     });
   } catch (error) {
     console.error('Failed to fetch bookmarks in API:', error);
-    return new Response(JSON.stringify({ error: 'Failed to fetch bookmarks' }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'public, s-maxage=60',
+    return new Response(
+      JSON.stringify({ error: 'Failed to fetch bookmarks' }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'public, s-maxage=60',
+        },
       },
-    });
+    );
   }
 }

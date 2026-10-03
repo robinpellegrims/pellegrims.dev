@@ -13,7 +13,7 @@ describe('Bookmark', () => {
           tags: [],
           title: '',
         }}
-      />
+      />,
     );
     expect(baseElement).toBeTruthy();
   });

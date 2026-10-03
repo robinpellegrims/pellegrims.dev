@@ -28,9 +28,15 @@ export const Header: FunctionComponent<HeaderProps> = ({ links }) => {
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             >
               <div className="flex flex-col gap-1.5">
-                <span className={`block h-0.5 w-5 bg-ink transition-all duration-300 ${menuOpen ? 'translate-y-2 rotate-45' : ''}`} />
-                <span className={`block h-0.5 w-5 bg-ink transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
-                <span className={`block h-0.5 w-5 bg-ink transition-all duration-300 ${menuOpen ? '-translate-y-2 -rotate-45' : ''}`} />
+                <span
+                  className={`block h-0.5 w-5 bg-ink transition-all duration-300 ${menuOpen ? 'translate-y-2 rotate-45' : ''}`}
+                />
+                <span
+                  className={`block h-0.5 w-5 bg-ink transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`}
+                />
+                <span
+                  className={`block h-0.5 w-5 bg-ink transition-all duration-300 ${menuOpen ? '-translate-y-2 -rotate-45' : ''}`}
+                />
               </div>
             </button>
           </div>
@@ -39,9 +45,7 @@ export const Header: FunctionComponent<HeaderProps> = ({ links }) => {
       {/* Mobile Menu Overlay */}
       <div
         className={`fixed inset-0 z-30 transition-all duration-500 md:hidden ${
-          menuOpen
-            ? 'visible opacity-100'
-            : 'invisible opacity-0'
+          menuOpen ? 'visible opacity-100' : 'invisible opacity-0'
         }`}
       >
         <div className="absolute inset-0 bg-canvas/95 backdrop-blur-2xl" />
