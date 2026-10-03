@@ -61,7 +61,7 @@ export const BlogArticle: FunctionComponent<BlogArticleProps> = ({
         </div>
       ) : null}
     </header>
-    <div className="prose prose-neutral mt-8 max-w-none prose-headings:font-display prose-headings:text-ink prose-p:text-ink/85 prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-accent/60 prose-blockquote:text-ink/70 prose-strong:text-ink prose-pre:bg-transparent prose-pre:p-0 prose-pre:shadow-none prose-code:text-accent-bright prose-hr:border-white/[0.06]">
+    <div className="prose mt-8 max-w-none prose-headings:font-display prose-headings:text-ink prose-p:text-ink/85 prose-li:text-ink/85 prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-accent/60 prose-blockquote:text-ink/70 prose-strong:text-ink prose-pre:bg-transparent prose-pre:p-0 prose-pre:shadow-none prose-code:text-accent-bright prose-hr:border-white/[0.06]">
       <Markdown markDown={markDown} />
     </div>
     {urlToShare ? (
