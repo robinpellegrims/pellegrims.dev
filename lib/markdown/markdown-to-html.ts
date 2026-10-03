@@ -6,7 +6,7 @@ import { Visitor } from 'unist-util-visit/complex-types';
 
 export const markdownToHtml = (
   markdown: string,
-  absolutePath: string
+  absolutePath: string,
 ): string =>
   remark()
     .use(externalLinks, { target: '_blank', rel: ['noreferrer'] })

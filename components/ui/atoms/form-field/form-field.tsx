@@ -10,8 +10,8 @@ interface FormFieldProps<InputType extends 'input' | 'textarea'> {
   htmlAttributes: InputType extends 'input'
     ? InputHTMLAttributes<HTMLInputElement>
     : InputType extends 'textarea'
-    ? TextareaHTMLAttributes<HTMLTextAreaElement>
-    : never;
+      ? TextareaHTMLAttributes<HTMLTextAreaElement>
+      : never;
 }
 
 type InputFieldProps = FormFieldProps<'input'>;

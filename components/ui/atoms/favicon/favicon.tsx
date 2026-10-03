@@ -23,10 +23,7 @@ export const FavIcon: FunctionComponent<{ pathPrefix?: string }> = ({
       sizes="16x16"
       href={`${pathPrefix}/favicon-16x16.png?v=${faviconVersion}`}
     />
-    <link
-      rel="manifest"
-      href={`/site.webmanifest?v=${faviconVersion}`}
-    />
+    <link rel="manifest" href={`/site.webmanifest?v=${faviconVersion}`} />
     <link
       rel="shortcut icon"
       href={`${pathPrefix}/favicon-32x32.png?v=${faviconVersion}`}

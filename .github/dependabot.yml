@@ -1,48 +1,48 @@
 version: 2
 
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "Europe/Brussels"
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Europe/Brussels'
     open-pull-requests-limit: 5
     assignees:
-      - "robinpellegrims"
+      - 'robinpellegrims'
     reviewers:
-      - "robinpellegrims"
+      - 'robinpellegrims'
     cooldown:
       default-days: 5
       semver-major-days: 30
       semver-minor-days: 7
       semver-patch-days: 3
     labels:
-      - "dependencies"
+      - 'dependencies'
     commit-message:
-      prefix: "chore"
-      prefix-development: "chore"
-      include: "scope"
+      prefix: 'chore'
+      prefix-development: 'chore'
+      include: 'scope'
     groups:
       security-patches:
-        applies-to: "security-updates"
+        applies-to: 'security-updates'
         patterns:
-          - "*"
+          - '*'
         update-types:
-          - "patch"
-          - "minor"
+          - 'patch'
+          - 'minor'
       development-validation:
-        dependency-type: "development"
+        dependency-type: 'development'
         patterns:
-          - "*"
+          - '*'
         update-types:
-          - "patch"
-          - "minor"
+          - 'patch'
+          - 'minor'
       runtime-validation:
-        dependency-type: "production"
+        dependency-type: 'production'
         patterns:
-          - "*"
+          - '*'
         update-types:
-          - "patch"
-          - "minor"
+          - 'patch'
+          - 'minor'

@@ -6,7 +6,7 @@ describe('Container', () => {
     const { baseElement } = render(
       <Container>
         <span>Content</span>
-      </Container>
+      </Container>,
     );
     expect(baseElement).toBeTruthy();
   });

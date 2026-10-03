@@ -23,7 +23,7 @@ export const useInfiniteScroll = ({
         onLoadMore();
       }
     },
-    [hasNextPage, isLoading, onLoadMore]
+    [hasNextPage, isLoading, onLoadMore],
   );
 
   useEffect(() => {

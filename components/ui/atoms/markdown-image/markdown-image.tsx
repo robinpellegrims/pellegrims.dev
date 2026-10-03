@@ -2,13 +2,23 @@ import { ImgHTMLAttributes, ReactElement } from 'react';
 import Image from 'next/image';
 import type { ExtraProps } from 'react-markdown';
 
-const isDefined = <SomeType,>(val: SomeType | undefined | null): val is SomeType => val !== undefined && val !== null;
+const isDefined = <SomeType,>(
+  val: SomeType | undefined | null,
+): val is SomeType => val !== undefined && val !== null;
 const isString = (value: unknown): value is string => typeof value === 'string';
 
 type MarkdownImageProps = ImgHTMLAttributes<HTMLImageElement> & ExtraProps;
 
-export const MarkdownImage = ({ node, children }: MarkdownImageProps): ReactElement => {
-  if (isDefined(node) && isDefined(node.properties) && isString(node.properties['alt']) && isString(node.properties['src'])) {
+export const MarkdownImage = ({
+  node,
+  children,
+}: MarkdownImageProps): ReactElement => {
+  if (
+    isDefined(node) &&
+    isDefined(node.properties) &&
+    isString(node.properties['alt']) &&
+    isString(node.properties['src'])
+  ) {
     const metastring = node.properties['alt'];
     const alt = metastring.replace(/ *\{[^)]*} */g, '');
     const metaWidth = metastring.match(/{([^}]+)x/);
@@ -22,8 +32,19 @@ export const MarkdownImage = ({ node, children }: MarkdownImageProps): ReactElem
 
     return (
       <span className="block text-center">
-        <Image src={imageSrc} alt={alt} priority={isPriority} width={+width} height={+height} style={{ margin: 'auto' }} />
-        {hasCaption ? <div className="caption" aria-label={caption}>{caption}</div> : null}
+        <Image
+          src={imageSrc}
+          alt={alt}
+          priority={isPriority}
+          width={+width}
+          height={+height}
+          style={{ margin: 'auto' }}
+        />
+        {hasCaption ? (
+          <div className="caption" aria-label={caption}>
+            {caption}
+          </div>
+        ) : null}
       </span>
     );
   }

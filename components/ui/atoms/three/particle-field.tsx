@@ -18,7 +18,7 @@ function buildParticleArrays(
   color: string,
   accentColor: string,
   size: number,
-  spread: number
+  spread: number,
 ) {
   const positions = new Float32Array(count * 3);
   const colors = new Float32Array(count * 3);
@@ -69,7 +69,7 @@ export const ParticleField = ({
   // Recompute particle data only when props change
   const { positions, colors, sizes } = useMemo(
     () => buildParticleArrays(count, color, accentColor, size, spread),
-    [count, color, accentColor, size, spread]
+    [count, color, accentColor, size, spread],
   );
 
   // Velocities stored in a ref so they can be mutated each frame
@@ -89,9 +89,10 @@ export const ParticleField = ({
   useFrame((state, delta) => {
     if (!pointsRef.current || !linesRef.current || !groupRef.current) return;
 
-    const pos = pointsRef.current.geometry.attributes.position.array as Float32Array;
+    const pos = pointsRef.current.geometry.attributes.position
+      .array as Float32Array;
     const velocities = velocitiesRef.current as Float32Array;
-    
+
     const linePositions: number[] = [];
     const maxDist = 6.0; // Connection distance threshold
     const maxDistSq = maxDist * maxDist;
@@ -109,7 +110,7 @@ export const ParticleField = ({
       const limitX = spread / 2;
       const limitY = (spread * 0.8) / 2;
       const limitZ = (spread * 0.4) / 2;
-      
+
       if (Math.abs(pos[i3]) > limitX) velocities[i3] *= -1;
       if (Math.abs(pos[i3 + 1]) > limitY) velocities[i3 + 1] *= -1;
       if (Math.abs(pos[i3 + 2]) > limitZ) velocities[i3 + 2] *= -1;
@@ -125,8 +126,12 @@ export const ParticleField = ({
         // If close enough, draw a line between them
         if (distSq < maxDistSq) {
           linePositions.push(
-            pos[i3], pos[i3 + 1], pos[i3 + 2],
-            pos[j3], pos[j3 + 1], pos[j3 + 2]
+            pos[i3],
+            pos[i3 + 1],
+            pos[i3 + 2],
+            pos[j3],
+            pos[j3 + 1],
+            pos[j3 + 2],
           );
         }
       }
@@ -138,7 +143,7 @@ export const ParticleField = ({
     // Update Lines geometry
     linesRef.current.geometry.setAttribute(
       'position',
-      new THREE.Float32BufferAttribute(linePositions, 3)
+      new THREE.Float32BufferAttribute(linePositions, 3),
     );
 
     // Subtle group rotation and mouse parallax
@@ -147,8 +152,10 @@ export const ParticleField = ({
 
     const targetRotX = mouseRef.current.y * 0.08;
     const targetRotY = mouseRef.current.x * 0.08;
-    groupRef.current.rotation.x += (targetRotX - groupRef.current.rotation.x) * 0.02;
-    groupRef.current.rotation.y += (targetRotY - groupRef.current.rotation.y) * 0.02;
+    groupRef.current.rotation.x +=
+      (targetRotX - groupRef.current.rotation.x) * 0.02;
+    groupRef.current.rotation.y +=
+      (targetRotY - groupRef.current.rotation.y) * 0.02;
   });
 
   return (

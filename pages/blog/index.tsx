@@ -37,24 +37,22 @@ export const getStaticProps: GetStaticProps<BlogProps> = async () => {
   const posts = getMarkdownDocuments(POSTS_PATH);
   return {
     props: {
-      posts: posts.map(
-        (post): CardProps => ({
-          title: post.frontMatter.title ?? '',
-          cover:
-            post.frontMatter.coverImage ??
-            buildOgImageUrl({
-              date: post.frontMatter.date,
-              description: post.frontMatter.description,
-              title: post.frontMatter.title,
-              readMinutes: post.readingTimeMins,
-            }),
-          created: post.frontMatter.date,
-          excerpt: post.frontMatter.description ?? '',
-          link: buildRelativeBlogArticleUrl(post.slug),
-          linkTarget: '_self',
-          tags: post.frontMatter.tags ?? [],
-        })
-      ),
+      posts: posts.map((post): CardProps => ({
+        title: post.frontMatter.title ?? '',
+        cover:
+          post.frontMatter.coverImage ??
+          buildOgImageUrl({
+            date: post.frontMatter.date,
+            description: post.frontMatter.description,
+            title: post.frontMatter.title,
+            readMinutes: post.readingTimeMins,
+          }),
+        created: post.frontMatter.date,
+        excerpt: post.frontMatter.description ?? '',
+        link: buildRelativeBlogArticleUrl(post.slug),
+        linkTarget: '_self',
+        tags: post.frontMatter.tags ?? [],
+      })),
     },
   };
 };

@@ -3,7 +3,10 @@ import { sendEmailViaSmtp } from '../utils/cloudflare';
 
 class MockResponse {
   status: number;
-  constructor(public body: any, public init: any) {
+  constructor(
+    public body: any,
+    public init: any,
+  ) {
     this.status = init?.status || 200;
   }
 }
@@ -11,7 +14,10 @@ global.Response = MockResponse as any;
 
 class MockNextRequest {
   method: string;
-  constructor(public url: string, public options: any) {
+  constructor(
+    public url: string,
+    public options: any,
+  ) {
     this.method = options?.method || 'GET';
   }
   async json() {
@@ -19,13 +25,13 @@ class MockNextRequest {
   }
 }
 jest.mock('next/server', () => ({
-  NextRequest: MockNextRequest
+  NextRequest: MockNextRequest,
 }));
 import { getCloudflareEnv } from '../utils/cloudflare';
 
 jest.mock('../utils/cloudflare', () => ({
   sendEmailViaSmtp: jest.fn(),
-  getCloudflareEnv: () => process.env
+  getCloudflareEnv: () => process.env,
 }));
 
 const sendEmailViaSmtpMock = sendEmailViaSmtp as jest.Mock;
@@ -41,7 +47,7 @@ const defaultEnv = {
   SMTP_HOST: 'Host',
   SMTP_USER: 'User',
   SMTP_PASS: 'Password',
-  CONTACT_MAIL_TO: 'to@domain.com'
+  CONTACT_MAIL_TO: 'to@domain.com',
 };
 
 const createRequest = (body: any) => {
@@ -68,7 +74,9 @@ describe('/api/contact', () => {
   });
 
   test('should respond with 405 for non-POST requests', async () => {
-    const req = new MockNextRequest('http://localhost/api/contact', { method: 'GET' }) as any;
+    const req = new MockNextRequest('http://localhost/api/contact', {
+      method: 'GET',
+    }) as any;
     const res = await contact(req);
     expect(res.status).toBe(405);
   });
@@ -81,7 +89,10 @@ describe('/api/contact', () => {
 
   describe('should respond with 400 when fields are missing', () => {
     test.each(['name', 'email', 'message'] as string[])('%s', async (field) => {
-      const { [field as keyof ContactApiRequestBody]: removedProperty, ...requestBody } = defaultRequestBody;
+      const {
+        [field as keyof ContactApiRequestBody]: removedProperty,
+        ...requestBody
+      } = defaultRequestBody;
       const req = createRequest(requestBody);
       const res = await contact(req);
       expect(res.status).toBe(400);
@@ -96,7 +107,10 @@ describe('/api/contact', () => {
       'SMTP_PASS',
       'CONTACT_MAIL_TO',
     ] as string[])('%s', async (missingVar) => {
-      const { [missingVar as keyof typeof defaultEnv]: removedProperty, ...processEnv } = defaultEnv;
+      const {
+        [missingVar as keyof typeof defaultEnv]: removedProperty,
+        ...processEnv
+      } = defaultEnv;
       process.env = { ...process.env, ...processEnv };
       const req = createRequest(defaultRequestBody);
       const res = await contact(req);

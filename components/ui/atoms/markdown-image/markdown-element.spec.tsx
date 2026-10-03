@@ -7,7 +7,7 @@ describe('MarkdownImage', () => {
       <MarkdownImage
         node={{ type: 'element', tagName: '', children: [] }}
         children={[]}
-      />
+      />,
     );
     expect(baseElement).toBeTruthy();
   });

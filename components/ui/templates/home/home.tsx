@@ -3,8 +3,11 @@ import { ThreeCanvas } from '@/components/ui/atoms/three/three-canvas';
 import dynamic from 'next/dynamic';
 
 const ParticleField = dynamic(
-  () => import('@/components/ui/atoms/three/particle-field').then((mod) => mod.ParticleField),
-  { ssr: false }
+  () =>
+    import('@/components/ui/atoms/three/particle-field').then(
+      (mod) => mod.ParticleField,
+    ),
+  { ssr: false },
 );
 
 interface HomeTemplateProps {

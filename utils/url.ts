@@ -23,9 +23,9 @@ export const buildRelativeOgImageUrl = ({
   readMinutes,
 }: OGImageParams) =>
   `/api/og-image?title=${encodeURIComponent(
-    title ?? ''
+    title ?? '',
   )}&description=${encodeURIComponent(
-    description ?? ''
+    description ?? '',
   )}&date=${date}&readMinutes=${readMinutes}`;
 
 export const getCurrentOrigin = () =>

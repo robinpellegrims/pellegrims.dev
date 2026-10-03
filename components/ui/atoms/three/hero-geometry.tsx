@@ -70,8 +70,10 @@ export const HeroGeometry = ({
     if (groupRef.current) {
       const targetRotX = mouseRef.current.y * 0.2;
       const targetRotY = mouseRef.current.x * 0.2;
-      groupRef.current.rotation.x += (targetRotX - groupRef.current.rotation.x) * 0.02;
-      groupRef.current.rotation.y += (targetRotY - groupRef.current.rotation.y) * 0.02;
+      groupRef.current.rotation.x +=
+        (targetRotX - groupRef.current.rotation.x) * 0.02;
+      groupRef.current.rotation.y +=
+        (targetRotY - groupRef.current.rotation.y) * 0.02;
     }
   });
 
@@ -96,7 +98,7 @@ export const HeroGeometry = ({
             blending={THREE.AdditiveBlending}
           />
         </points>
-        
+
         <points ref={outerRingRef}>
           <bufferGeometry>
             <bufferAttribute

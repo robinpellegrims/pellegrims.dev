@@ -8,7 +8,7 @@ describe('CodeBlock', () => {
         node={{ type: 'element', tagName: '', children: [] }}
         children={["console.log('test')"]}
         className="language-typescript"
-      />
+      />,
     );
     expect(baseElement).toBeTruthy();
   });

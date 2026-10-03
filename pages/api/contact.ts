@@ -4,7 +4,6 @@ import { sendEmailViaSmtp, getCloudflareEnv } from '@/utils/cloudflare';
 
 export const runtime = 'edge';
 
-
 export interface ContactApiResponseBody {
   error?: string;
 }
@@ -29,41 +28,59 @@ export default async function contact(req: NextRequest) {
   }
 
   if (!body.email || !body.name || !body.message) {
-    return new Response(JSON.stringify({ error: 'Name, e-mail and message are mandatory.' }), {
-      status: HTTP_BAD_REQUEST,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(
+      JSON.stringify({ error: 'Name, e-mail and message are mandatory.' }),
+      {
+        status: HTTP_BAD_REQUEST,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    );
   }
 
   const env = getCloudflareEnv();
 
-  if (!env.SMTP_PORT || !env.SMTP_HOST || !env.SMTP_USER || !env.SMTP_PASS || !env.CONTACT_MAIL_TO) {
-    return new Response(JSON.stringify({ error: 'Missing environment variables' }), {
-      status: HTTP_INTERNAL_SERVER_ERROR,
-      headers: { 'Content-Type': 'application/json' },
-    });
+  if (
+    !env.SMTP_PORT ||
+    !env.SMTP_HOST ||
+    !env.SMTP_USER ||
+    !env.SMTP_PASS ||
+    !env.CONTACT_MAIL_TO
+  ) {
+    return new Response(
+      JSON.stringify({ error: 'Missing environment variables' }),
+      {
+        status: HTTP_INTERNAL_SERVER_ERROR,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    );
   }
 
   try {
-    await sendEmailViaSmtp({
-      host: env.SMTP_HOST,
-      port: Number(env.SMTP_PORT),
-      user: env.SMTP_USER,
-      pass: env.SMTP_PASS,
-    }, {
-      from: env.SMTP_USER, // Ensure From matches the authenticated user
-      replyTo: body.email,
-      to: env.CONTACT_MAIL_TO,
-      subject: `[pellegrims.dev] Message from ${body.name}`,
-      text: body.message,
-    });
+    await sendEmailViaSmtp(
+      {
+        host: env.SMTP_HOST,
+        port: Number(env.SMTP_PORT),
+        user: env.SMTP_USER,
+        pass: env.SMTP_PASS,
+      },
+      {
+        from: env.SMTP_USER, // Ensure From matches the authenticated user
+        replyTo: body.email,
+        to: env.CONTACT_MAIL_TO,
+        subject: `[pellegrims.dev] Message from ${body.name}`,
+        text: body.message,
+      },
+    );
 
     return new Response(null, { status: HTTP_NO_CONTENT });
   } catch (error) {
     console.error(error);
-    return new Response(JSON.stringify({ error: 'Error while sending e-mail' }), {
-      status: HTTP_INTERNAL_SERVER_ERROR,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(
+      JSON.stringify({ error: 'Error while sending e-mail' }),
+      {
+        status: HTTP_INTERNAL_SERVER_ERROR,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    );
   }
 }
