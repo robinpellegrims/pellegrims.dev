@@ -9,18 +9,16 @@ export const markdownToHtml = (
   absolutePath: string,
 ): string => {
   const processor = remark()
-    .use(externalLinks, { target: '_blank', rel: ['noreferrer'] })
-    // Adapt remark-html 16's unified 11 processor to remark 14's unified 10.
+    // Adapt remark-external-links 9's unified 10 plugin to remark 15's unified 11.
     .use(function () {
-      Reflect.apply(remarkHtml, this, []);
+      Reflect.apply(externalLinks, this, [
+        { target: '_blank', rel: ['noreferrer'] },
+      ]);
     })
+    .use(remarkHtml)
     .use(fixImages, { absolutePath })
     .freeze();
 
-  // unified 11 plugins set `compiler`; unified 10 reads `Compiler`.
-  processor.Compiler = (
-    processor as typeof processor & { compiler: typeof processor.Compiler }
-  ).compiler;
   return processor.processSync(markdown).toString();
 };
 
