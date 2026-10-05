@@ -1,6 +1,7 @@
 import { remark } from 'remark';
-import remarkHtml from 'remark-html';
-import externalLinks from 'remark-external-links';
+import externalLinks from 'rehype-external-links';
+import rehypeStringify from 'rehype-stringify';
+import remarkRehype from 'remark-rehype';
 import { visit } from 'unist-util-visit';
 import { Visitor } from 'unist-util-visit/complex-types';
 
@@ -9,14 +10,10 @@ export const markdownToHtml = (
   absolutePath: string,
 ): string => {
   const processor = remark()
-    // Adapt remark-external-links 9's unified 10 plugin to remark 15's unified 11.
-    .use(function () {
-      Reflect.apply(externalLinks, this, [
-        { target: '_blank', rel: ['noreferrer'] },
-      ]);
-    })
-    .use(remarkHtml)
     .use(fixImages, { absolutePath })
+    .use(remarkRehype)
+    .use(externalLinks, { target: '_blank', rel: ['noreferrer'] })
+    .use(rehypeStringify)
     .freeze();
 
   return processor.processSync(markdown).toString();
