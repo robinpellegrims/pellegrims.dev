@@ -75,7 +75,8 @@
   "pnpm": {
     "overrides": {
       "prismjs@<1.30.0": ">=1.30.0",
-      "minimatch@<10.2.1": ">=10.2.1"
+      "minimatch@<10.2.1": ">=10.2.1",
+      "handlebars@<4.7.10": ">=4.7.10"
     },
     "peerDependencyRules": {
       "allowedVersions": {
