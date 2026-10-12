@@ -7,6 +7,7 @@ settings:
 overrides:
   prismjs@<1.30.0: '>=1.30.0'
   minimatch@<10.2.1: '>=10.2.1'
+  handlebars@<4.7.10: '>=4.7.10'
 
 importers:
   .:
@@ -4917,12 +4918,9 @@ packages:
       }
     engines: { node: '>=6.0' }
 
-  handlebars@4.7.9:
-    resolution:
-      {
-        integrity: sha512-4E71E0rpOaQuJR2A3xDZ+GM1HyWYv1clR58tC8emQNeQe3RH7MAzSbat+V0wG78LQBo6m6bzSG/L4pBuCsgnUQ==,
-      }
-    engines: { node: '>=0.4.7' }
+  handlebars@4.7.10:
+    resolution: {integrity: sha512-P5VJMVM7qgBn6vjXMw8WG9uVI+ncf2pi72j4de4yz5ZULLj2RGqLYaKOYGsgyrViQ0tePOVlN1tDCCXXtFqXKg==}
+    engines: {node: '>=0.4.7'}
     hasBin: true
 
   harfbuzzjs@0.10.0:
@@ -11558,7 +11556,7 @@ snapshots:
       section-matter: 1.0.0
       strip-bom-string: 1.0.0
 
-  handlebars@4.7.9:
+  handlebars@4.7.10:
     dependencies:
       minimist: 1.2.8
       neo-async: 2.6.2
@@ -13733,7 +13731,7 @@ snapshots:
     dependencies:
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      handlebars: 4.7.9
+      handlebars: 4.7.10
       jest: 30.5.2(@types/node@20.17.10)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.15.8(@swc/helpers@0.5.23))(@types/node@20.17.10)(typescript@6.0.3))
       json5: 2.2.3
       lodash.memoize: 4.1.2
