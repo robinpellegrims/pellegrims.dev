@@ -2,6 +2,7 @@
   "name": "pellegrims-dev",
   "version": "0.0.0",
   "license": "MIT",
+  "packageManager": "pnpm@10.34.9",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
