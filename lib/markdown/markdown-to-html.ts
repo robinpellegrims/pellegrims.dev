@@ -3,7 +3,7 @@ import externalLinks from 'rehype-external-links';
 import rehypeStringify from 'rehype-stringify';
 import remarkRehype from 'remark-rehype';
 import { visit } from 'unist-util-visit';
-import { Visitor } from 'unist-util-visit/complex-types';
+import type { Visitor } from 'unist-util-visit';
 
 export const markdownToHtml = (
   markdown: string,
