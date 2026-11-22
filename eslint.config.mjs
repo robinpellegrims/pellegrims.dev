@@ -23,6 +23,9 @@ export default [
   {
     files: ['**/*.{ts,tsx,js,jsx}'],
     languageOptions: {
+      parserOptions: {
+        projectService: true,
+      },
       globals: {
         describe: 'readonly',
         it: 'readonly',
