@@ -73,8 +73,9 @@
     "tailwindcss": "4.3.5",
     "ts-jest": "29.4.15",
     "ts-node": "10.9.2",
-    "typescript": "6.0.3",
-    "wrangler": "^4.142.0"
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
+    "wrangler": "^4.142.0",
+    "@typescript/native": "npm:typescript@^7.0.2"
   },
   "pnpm": {
     "overrides": {
