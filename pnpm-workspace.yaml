@@ -1,0 +1,15 @@
+pmOnFail: ignore
+overrides:
+  prismjs@<1.30.0: '>=1.30.0'
+  minimatch@<10.2.1: '>=10.2.1'
+  handlebars@<4.7.10: '>=4.7.10'
+peerDependencyRules:
+  allowedVersions:
+    react: '19'
+    react-dom: '19'
+allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  esbuild: true
+  unrs-resolver: true
+  workerd: true
