@@ -33,9 +33,9 @@
     "rehype-stringify": "^10.0.1",
     "remark": "^15.0.1",
     "remark-rehype": "^11.1.2",
-    "three": "^0.186.1",
-    "tslib": "^2.3.0",
-    "unist-util-visit": "^5.1.0"
+    "three": "^0.187.0",
+    "tslib": "^2.9.1",
+    "unist-util-visit": "^5.2.0"
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.13.16",
@@ -51,7 +51,7 @@
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@types/react-syntax-highlighter": "^15.5.13",
-    "@types/three": "^0.186.0",
+    "@types/three": "^0.187.0",
     "@typescript-eslint/eslint-plugin": "8.72.2",
     "@typescript-eslint/parser": "8.72.2",
     "@vercel/og": "^1.0.3",
